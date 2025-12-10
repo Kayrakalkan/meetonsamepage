@@ -163,6 +163,10 @@ def search_everywhere_api():
         if not origins:
             return jsonify({"error": "Missing origins"}), 400
         
+        # Get all airport codes from our database
+        data = load_airports()
+        all_airports = [a['code'] for a in data['airports']]
+        
         # Run everywhere search
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
@@ -176,7 +180,8 @@ def search_everywhere_api():
                     trip_days=trip_days,
                     api_key=KIWI_API_KEY,
                     currency=currency,
-                    direct_only=direct_only
+                    direct_only=direct_only,
+                    airports_list=all_airports
                 )
             )
         finally:
@@ -286,4 +291,7 @@ if __name__ == '__main__':
     print("\n🚀 Starting MeetOnSamePage server...")
     print("   Open http://localhost:5000 in your browser\n")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    app.run(debug=debug, host='0.0.0.0', port=port)
+

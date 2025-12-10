@@ -341,6 +341,7 @@ function displayDestinationResults(destinations, currency, isEverywhere = false)
     if (!destinations || destinations.length === 0) {
         document.getElementById('bestMatch').style.display = 'none';
         document.querySelector('.results-grid').style.display = 'none';
+        document.getElementById('pairedFlights').innerHTML = '';
         document.getElementById('destinationResults').style.display = 'block';
         document.querySelector('#destinationResults .destinations-list').innerHTML = 
             '<div class="no-flights">No destinations found with flights from both origins</div>';
@@ -348,8 +349,9 @@ function displayDestinationResults(destinations, currency, isEverywhere = false)
         return;
     }
     
-    // Hide the old destination results view
+    // Hide the old views
     document.getElementById('destinationResults').style.display = 'none';
+    document.querySelector('.results-grid').style.display = 'none';
     
     // Get the best destination (cheapest combined)
     const bestDest = destinations[0];
@@ -357,10 +359,6 @@ function displayDestinationResults(destinations, currency, isEverywhere = false)
     // Prepare data in the same format as airport search
     const origin1 = bestDest.flights[0]?.departure_airport || 'Origin 1';
     const origin2 = bestDest.flights[1]?.departure_airport || 'Origin 2';
-    
-    // Create flight lists for each origin from all destinations
-    const flights1 = destinations.map(d => d.flights[0]).filter(f => f);
-    const flights2 = destinations.map(d => d.flights[1]).filter(f => f);
     
     // Create best matches array (each destination is a "match")
     const bestMatches = destinations.slice(0, 5).map(d => ({
@@ -372,25 +370,65 @@ function displayDestinationResults(destinations, currency, isEverywhere = false)
         flights: d.flights
     }));
     
-    // Update titles to show destination info
-    const title1 = document.querySelector('#results1 h3');
-    const title2 = document.querySelector('#results2 h3');
-    title1.textContent = `✈️ From ${origin1}`;
-    title2.textContent = `✈️ From ${origin2}`;
-    
-    // Display flights in the grid
-    displayFlightsForDestSearch('results1', flights1, origin1, currency);
-    displayFlightsForDestSearch('results2', flights2, origin2, currency);
-    
     // Display best matches
     displayBestMatchesForDestSearch(bestMatches, currency, isEverywhere);
     
-    // Show the results grid
-    document.querySelector('.results-grid').style.display = 'grid';
+    // Display paired flights for destinations
+    displayPairedFlightsForDest(destinations, origin1, origin2, currency, isEverywhere);
+    
+    // Show results
     document.getElementById('bestMatch').style.display = 'block';
     
     resultsContainer.style.display = 'block';
     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Display paired flights for destination/everywhere search
+function displayPairedFlightsForDest(destinations, origin1, origin2, currency, isEverywhere) {
+    const container = document.getElementById('pairedFlights');
+    
+    // Each destination already has paired flights
+    const pairs = destinations.map((d, index) => ({
+        destination: d.destination,
+        flight1: d.flights[0],
+        flight2: d.flights[1],
+        combinedPrice: d.combined_price,
+        isBest: index === 0
+    }));
+    
+    if (pairs.length === 0) {
+        container.innerHTML = '<div class="no-flights">No destinations found</div>';
+        return;
+    }
+    
+    container.innerHTML = pairs.map((pair, index) => `
+        <div class="paired-flight-row ${pair.isBest ? 'best-row' : ''}">
+            <div class="row-header">
+                <span class="row-dates">${pair.destination} - ${formatDisplayDate(pair.flight1.departure_date)} → ${formatDisplayDate(pair.flight1.return_date)}</span>
+                <span class="row-total">Total: ${formatPrice(pair.combinedPrice, currency)}</span>
+            </div>
+            <div class="paired-flight-card">
+                <div class="pf-origin">Person 1 - ${origin1}</div>
+                <div class="pf-route">${pair.flight1.departure_airport} → ${pair.flight1.arrival_airport}</div>
+                <div class="pf-price">${formatPrice(pair.flight1.price, currency)}</div>
+                ${pair.flight1.airline ? `<div class="pf-airline">${pair.flight1.airline}</div>` : ''}
+                <div class="pf-actions">
+                    <button class="pf-details" onclick='showFlightDetails(${JSON.stringify(pair.flight1).replace(/'/g, "&#39;")})'>Details</button>
+                    ${pair.flight1.link ? `<a href="${pair.flight1.link}" target="_blank" class="pf-book">Book</a>` : ''}
+                </div>
+            </div>
+            <div class="paired-flight-card">
+                <div class="pf-origin">Person 2 - ${origin2}</div>
+                <div class="pf-route">${pair.flight2.departure_airport} → ${pair.flight2.arrival_airport}</div>
+                <div class="pf-price">${formatPrice(pair.flight2.price, currency)}</div>
+                ${pair.flight2.airline ? `<div class="pf-airline">${pair.flight2.airline}</div>` : ''}
+                <div class="pf-actions">
+                    <button class="pf-details" onclick='showFlightDetails(${JSON.stringify(pair.flight2).replace(/'/g, "&#39;")})'>Details</button>
+                    ${pair.flight2.link ? `<a href="${pair.flight2.link}" target="_blank" class="pf-book">Book</a>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
 }
 
 // Display flights for destination/everywhere search
@@ -409,16 +447,15 @@ function displayFlightsForDestSearch(containerId, flights, origin, currency) {
                 <span class="price">${formatPrice(flight.price, currency)}</span>
             </div>
             <div class="flight-details">
-                <span class="detail">🛫 ${formatDisplayDate(flight.departure_date)}</span>
-                <span class="detail">🛬 ${formatDisplayDate(flight.return_date)}</span>
-                ${flight.airline ? `<span class="detail">✈️ ${flight.airline}</span>` : ''}
-                <span class="detail">${flight.stops === 0 ? '✅ Direct' : '🔄 ' + flight.stops + ' stop(s)'}</span>
+                <span class="detail">${formatDisplayDate(flight.departure_date)}</span>
+                <span class="detail">${formatDisplayDate(flight.return_date)}</span>
+                ${flight.airline ? `<span class="detail">${flight.airline}</span>` : ''}
             </div>
             <div class="flight-actions">
                 <button class="details-btn" onclick='showFlightDetails(${JSON.stringify(flight).replace(/'/g, "&#39;")})'>
-                    📋 Details
+                    Details
                 </button>
-                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now →</a>` : ''}
+                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now</a>` : ''}
             </div>
         </div>
     `).join('');
@@ -431,13 +468,13 @@ function displayBestMatchesForDestSearch(matches, currency, isEverywhere) {
     const bestMatch = matches[0];
     
     const headerTitle = isEverywhere 
-        ? `🌎 Best Destination: ${bestMatch.destination}` 
-        : `🌍 Best Destination: ${bestMatch.destination}`;
+        ? `Best Destination: ${bestMatch.destination}` 
+        : `Best Destination: ${bestMatch.destination}`;
     
     matchContent.innerHTML = `
         <div class="best-match-header">
             <h4>${headerTitle}</h4>
-            <div class="match-dates">📅 ${formatDisplayDate(bestMatch.departure_date)} → ${formatDisplayDate(bestMatch.return_date)}</div>
+            <div class="match-dates">${formatDisplayDate(bestMatch.departure_date)} → ${formatDisplayDate(bestMatch.return_date)}</div>
             <div class="combined-price">Combined Total: ${formatPrice(bestMatch.combined_price, currency)}</div>
         </div>
         <div class="match-flights">
@@ -445,29 +482,15 @@ function displayBestMatchesForDestSearch(matches, currency, isEverywhere) {
                 <div class="match-flight">
                     <div class="airport">${f.departure_airport} → ${f.arrival_airport}</div>
                     <div class="price">${formatPrice(f.price, currency)}</div>
-                    <div class="date">🛫 ${formatDisplayDate(f.departure_date)}</div>
-                    <div class="date">🛬 ${formatDisplayDate(f.return_date)}</div>
-                    ${f.airline ? `<div class="airline">✈️ ${f.airline}</div>` : ''}
-                    <div class="stops">${f.stops === 0 ? '✅ Direct' : '🔄 ' + f.stops + ' stop(s)'}</div>
+                    <div class="date">${formatDisplayDate(f.departure_date)} - ${formatDisplayDate(f.return_date)}</div>
+                    ${f.airline ? `<div class="airline">${f.airline}</div>` : ''}
                     <button class="book-link" style="margin-top: 10px; border: none; cursor: pointer;" onclick='showFlightDetails(${JSON.stringify(f).replace(/'/g, "&#39;")})'>
-                        📋 Details
+                        Details
                     </button>
-                    ${f.link ? `<a href="${f.link}" target="_blank" class="book-link">Book →</a>` : ''}
+                    ${f.link ? `<a href="${f.link}" target="_blank" class="book-link">Book</a>` : ''}
                 </div>
             `).join('')}
         </div>
-        ${matches.length > 1 ? `
-            <div class="other-matches">
-                <h5>Other ${isEverywhere ? 'Cheap' : 'Good'} Destinations:</h5>
-                ${matches.slice(1, 5).map(m => `
-                    <div class="other-match">
-                        <span class="other-dest">${m.destination}</span>
-                        <span class="other-dates">${formatDisplayDate(m.departure_date)} → ${formatDisplayDate(m.return_date)}</span>
-                        <span class="other-price">${formatPrice(m.combined_price, currency)}</span>
-                    </div>
-                `).join('')}
-            </div>
-        ` : ''}
     `;
     
     bestMatchContainer.style.display = 'block';
@@ -475,29 +498,145 @@ function displayBestMatchesForDestSearch(matches, currency, isEverywhere) {
 
 function displayResults(data, origin1, origin2, currency) {
     const resultsContainer = document.getElementById('results');
-    const results1 = data.results[origin1] || [];
-    const results2 = data.results[origin2] || [];
+    let results1 = data.results[origin1] || [];
+    let results2 = data.results[origin2] || [];
     
-    // Hide destination results, show flight results
+    // Hide destination results and old grid
     document.getElementById('destinationResults').style.display = 'none';
-    document.querySelector('.results-grid').style.display = 'grid';
-    
-    // Display individual results
-    displayFlights('results1', results1, origin1, currency);
-    displayFlights('results2', results2, origin2, currency);
+    document.querySelector('.results-grid').style.display = 'none';
     
     // Display best matches from backend
     displayBestMatches(data.best_matches, currency);
     
+    // Display paired flights (same dates side by side)
+    displayPairedFlights(results1, results2, origin1, origin2, data.best_matches, currency);
+    
     resultsContainer.style.display = 'block';
     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Display flights paired by matching dates
+function displayPairedFlights(flights1, flights2, origin1, origin2, bestMatches, currency) {
+    const container = document.getElementById('pairedFlights');
+    
+    // Create a map of flights by date for each origin
+    const flights1ByDate = {};
+    const flights2ByDate = {};
+    
+    flights1.forEach(f => {
+        const key = f.departure_date + '_' + f.return_date;
+        if (!flights1ByDate[key]) flights1ByDate[key] = f;
+    });
+    
+    flights2.forEach(f => {
+        const key = f.departure_date + '_' + f.return_date;
+        if (!flights2ByDate[key]) flights2ByDate[key] = f;
+    });
+    
+    // Get best match date keys for highlighting
+    const bestDateKeys = (bestMatches || []).slice(0, 1).map(m => {
+        if (m.flights && m.flights[0]) {
+            return m.flights[0].departure_date + '_' + m.flights[0].return_date;
+        }
+        return null;
+    }).filter(k => k);
+    
+    // Find all common dates and create pairs
+    const allDateKeys = new Set([...Object.keys(flights1ByDate), ...Object.keys(flights2ByDate)]);
+    const pairs = [];
+    
+    allDateKeys.forEach(dateKey => {
+        const f1 = flights1ByDate[dateKey];
+        const f2 = flights2ByDate[dateKey];
+        
+        // Only show if both have flights on this date
+        if (f1 && f2) {
+            pairs.push({
+                dateKey,
+                flight1: f1,
+                flight2: f2,
+                combinedPrice: f1.price + f2.price,
+                isBest: bestDateKeys.includes(dateKey)
+            });
+        }
+    });
+    
+    // Sort by combined price
+    pairs.sort((a, b) => a.combinedPrice - b.combinedPrice);
+    
+    if (pairs.length === 0) {
+        container.innerHTML = '<div class="no-flights">No matching dates found for both origins</div>';
+        return;
+    }
+    
+    container.innerHTML = pairs.map((pair, index) => `
+        <div class="paired-flight-row ${pair.isBest ? 'best-row' : ''}">
+            <div class="row-header">
+                <span class="row-dates">${formatDisplayDate(pair.flight1.departure_date)} → ${formatDisplayDate(pair.flight1.return_date)}</span>
+                <span class="row-total">Total: ${formatPrice(pair.combinedPrice, currency)}</span>
+            </div>
+            <div class="paired-flight-card">
+                <div class="pf-origin">Person 1 - ${origin1}</div>
+                <div class="pf-route">${pair.flight1.departure_airport} → ${pair.flight1.arrival_airport}</div>
+                <div class="pf-price">${formatPrice(pair.flight1.price, currency)}</div>
+                ${pair.flight1.airline ? `<div class="pf-airline">${pair.flight1.airline}</div>` : ''}
+                <div class="pf-actions">
+                    <button class="pf-details" onclick='showFlightDetails(${JSON.stringify(pair.flight1).replace(/'/g, "&#39;")})'>Details</button>
+                    ${pair.flight1.link ? `<a href="${pair.flight1.link}" target="_blank" class="pf-book">Book</a>` : ''}
+                </div>
+            </div>
+            <div class="paired-flight-card">
+                <div class="pf-origin">Person 2 - ${origin2}</div>
+                <div class="pf-route">${pair.flight2.departure_airport} → ${pair.flight2.arrival_airport}</div>
+                <div class="pf-price">${formatPrice(pair.flight2.price, currency)}</div>
+                ${pair.flight2.airline ? `<div class="pf-airline">${pair.flight2.airline}</div>` : ''}
+                <div class="pf-actions">
+                    <button class="pf-details" onclick='showFlightDetails(${JSON.stringify(pair.flight2).replace(/'/g, "&#39;")})'>Details</button>
+                    ${pair.flight2.link ? `<a href="${pair.flight2.link}" target="_blank" class="pf-book">Book</a>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Reorder flights so best matching flights appear at the top
+function reorderFlightsWithBestFirst(flights, bestMatches, flightIndex) {
+    if (!flights || flights.length === 0) return flights;
+    
+    // Get all best match flight dates
+    const bestDates = bestMatches.map(m => {
+        if (m.flights && m.flights[flightIndex]) {
+            return m.flights[flightIndex].departure_date + '_' + m.flights[flightIndex].return_date;
+        }
+        return null;
+    }).filter(d => d);
+    
+    // Separate into best flights and other flights
+    const bestFlights = [];
+    const otherFlights = [];
+    
+    flights.forEach(f => {
+        const dateKey = f.departure_date + '_' + f.return_date;
+        const bestIndex = bestDates.indexOf(dateKey);
+        if (bestIndex !== -1) {
+            bestFlights.push({ flight: f, order: bestIndex });
+        } else {
+            otherFlights.push(f);
+        }
+    });
+    
+    // Sort best flights by their order in best_matches
+    bestFlights.sort((a, b) => a.order - b.order);
+    
+    // Return reordered array: best flights first, then others
+    return [...bestFlights.map(bf => bf.flight), ...otherFlights];
 }
 
 function displayFlights(containerId, flights, origin, currency) {
     const container = document.querySelector(`#${containerId} .flights-list`);
     const title = document.querySelector(`#${containerId} h3`);
     
-    title.textContent = `✈️ From ${origin}`;
+    title.textContent = `From ${origin}`;
     
     if (flights.length === 0) {
         container.innerHTML = '<div class="no-flights">No flights found</div>';
@@ -511,16 +650,15 @@ function displayFlights(containerId, flights, origin, currency) {
                 <span class="price">${formatPrice(flight.price, currency)}</span>
             </div>
             <div class="flight-details">
-                <span class="detail">🛫 ${formatDisplayDate(flight.departure_date)}</span>
-                <span class="detail">🛬 ${formatDisplayDate(flight.return_date)}</span>
-                ${flight.airline ? `<span class="detail">✈️ ${flight.airline}</span>` : ''}
-                <span class="detail">${flight.stops === 0 ? '✅ Direct' : '🔄 ' + flight.stops + ' stop(s)'}</span>
+                <span class="detail">${formatDisplayDate(flight.departure_date)}</span>
+                <span class="detail">${formatDisplayDate(flight.return_date)}</span>
+                ${flight.airline ? `<span class="detail">${flight.airline}</span>` : ''}
             </div>
             <div class="flight-actions">
                 <button class="details-btn" onclick='showFlightDetails(${JSON.stringify(flight).replace(/'/g, "&#39;")})'>
-                    📋 Details
+                    Details
                 </button>
-                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now →</a>` : ''}
+                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now</a>` : ''}
             </div>
         </div>
     `).join('');
@@ -567,7 +705,7 @@ function displayFlights(containerId, flights, origin, currency) {
     const container = document.querySelector(`#${containerId} .flights-list`);
     const title = document.querySelector(`#${containerId} h3`);
     
-    title.textContent = `✈️ From ${origin}`;
+    title.textContent = `From ${origin}`;
     
     if (flights.length === 0) {
         container.innerHTML = '<div class="no-flights">No flights found</div>';
@@ -581,16 +719,15 @@ function displayFlights(containerId, flights, origin, currency) {
                 <span class="price">${formatPrice(flight.price, currency)}</span>
             </div>
             <div class="flight-details">
-                <span class="detail">� ${formatDisplayDate(flight.departure_date)}</span>
-                <span class="detail">🛬 ${formatDisplayDate(flight.return_date)}</span>
-                ${flight.airline ? `<span class="detail">✈️ ${flight.airline}</span>` : ''}
-                <span class="detail">${flight.stops === 0 ? '✅ Direct' : '🔄 ' + flight.stops + ' stop(s)'}</span>
+                <span class="detail">${formatDisplayDate(flight.departure_date)}</span>
+                <span class="detail">${formatDisplayDate(flight.return_date)}</span>
+                ${flight.airline ? `<span class="detail">${flight.airline}</span>` : ''}
             </div>
             <div class="flight-actions">
                 <button class="details-btn" onclick='showFlightDetails(${JSON.stringify(flight).replace(/'/g, "&#39;")})'>
-                    📋 Details
+                    Details
                 </button>
-                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now →</a>` : ''}
+                ${flight.link ? `<a href="${flight.link}" target="_blank" class="book-link">Book Now</a>` : ''}
             </div>
         </div>
     `).join('');
@@ -609,7 +746,7 @@ function displayBestMatches(matches, currency) {
     
     matchContent.innerHTML = `
         <div class="best-match-header">
-            <h4>🎯 Best Matching Dates: ${formatDisplayDate(bestMatch.departure_date)} → ${formatDisplayDate(bestMatch.return_date)}</h4>
+            <h4>Best Matching Dates: ${formatDisplayDate(bestMatch.departure_date)} → ${formatDisplayDate(bestMatch.return_date)}</h4>
             <div class="combined-price">Combined Total: ${formatPrice(bestMatch.combined_price, currency)}</div>
         </div>
         <div class="match-flights">
@@ -617,28 +754,15 @@ function displayBestMatches(matches, currency) {
                 <div class="match-flight">
                     <div class="airport">${f.departure_airport} → ${f.arrival_airport}</div>
                     <div class="price">${formatPrice(f.price, currency)}</div>
-                    <div class="date">� ${formatDisplayDate(f.departure_date)}</div>
-                    <div class="date">🛬 ${formatDisplayDate(f.return_date)}</div>
-                    ${f.airline ? `<div class="airline">✈️ ${f.airline}</div>` : ''}
-                    <div class="stops">${f.stops === 0 ? '✅ Direct' : '🔄 ' + f.stops + ' stop(s)'}</div>
+                    <div class="date">${formatDisplayDate(f.departure_date)} - ${formatDisplayDate(f.return_date)}</div>
+                    ${f.airline ? `<div class="airline">${f.airline}</div>` : ''}
                     <button class="book-link" style="margin-top: 10px; border: none; cursor: pointer;" onclick='showFlightDetails(${JSON.stringify(f).replace(/'/g, "&#39;")})'>
-                        📋 Details
+                        Details
                     </button>
-                    ${f.link ? `<a href="${f.link}" target="_blank" class="book-link">Book →</a>` : ''}
+                    ${f.link ? `<a href="${f.link}" target="_blank" class="book-link">Book</a>` : ''}
                 </div>
             `).join('')}
         </div>
-        ${matches.length > 1 ? `
-            <div class="other-matches">
-                <h5>Other Good Options:</h5>
-                ${matches.slice(1, 5).map(m => `
-                    <div class="other-match">
-                        <span class="other-dates">${formatDisplayDate(m.departure_date)} → ${formatDisplayDate(m.return_date)}</span>
-                        <span class="other-price">${formatPrice(m.combined_price, currency)}</span>
-                    </div>
-                `).join('')}
-            </div>
-        ` : ''}
     `;
     
     bestMatchContainer.style.display = 'block';
@@ -650,7 +774,7 @@ function showFlightDetails(flight) {
     
     modalBody.innerHTML = `
         <div class="flight-segment">
-            <h4>🛫 Outbound Flight</h4>
+            <h4>Outbound Flight</h4>
             <div class="segment-route">
                 <div class="segment-airport">
                     <div class="code">${flight.departure_airport}</div>
@@ -659,7 +783,7 @@ function showFlightDetails(flight) {
                 </div>
                 <div class="segment-arrow">
                     <div class="duration">${flight.duration || 'N/A'}</div>
-                    <div class="plane-icon">✈️</div>
+                    <div class="plane-icon">→</div>
                 </div>
                 <div class="segment-airport">
                     <div class="code">${flight.arrival_airport}</div>
@@ -668,14 +792,13 @@ function showFlightDetails(flight) {
                 </div>
             </div>
             <div class="segment-info">
-                ${flight.airline ? `<span>✈️ ${flight.airline}</span>` : ''}
-                <span>${flight.stops === 0 ? '✅ Direct flight' : '🔄 ' + flight.stops + ' stop(s)'}</span>
+                ${flight.airline ? `<span>${flight.airline}</span>` : ''}
             </div>
         </div>
         
         ${flight.return_date ? `
         <div class="flight-segment">
-            <h4>🛬 Return Flight</h4>
+            <h4>Return Flight</h4>
             <div class="segment-route">
                 <div class="segment-airport">
                     <div class="code">${flight.arrival_airport}</div>
@@ -684,7 +807,7 @@ function showFlightDetails(flight) {
                 </div>
                 <div class="segment-arrow">
                     <div class="duration">${flight.return_duration || flight.duration || 'N/A'}</div>
-                    <div class="plane-icon">✈️</div>
+                    <div class="plane-icon">→</div>
                 </div>
                 <div class="segment-airport">
                     <div class="code">${flight.departure_airport}</div>
@@ -693,14 +816,13 @@ function showFlightDetails(flight) {
                 </div>
             </div>
             <div class="segment-info">
-                ${flight.airline ? `<span>✈️ ${flight.airline}</span>` : ''}
-                <span>${flight.return_stops !== undefined ? (flight.return_stops === 0 ? '✅ Direct flight' : '🔄 ' + flight.return_stops + ' stop(s)') : ''}</span>
+                ${flight.airline ? `<span>${flight.airline}</span>` : ''}
             </div>
         </div>
         ` : ''}
         
         <div class="flight-segment" style="background: linear-gradient(135deg, #667eea15, #764ba215);">
-            <h4>💰 Price Summary</h4>
+            <h4>Price Summary</h4>
             <div style="font-size: 1.5rem; font-weight: 700; color: #667eea; margin-top: 10px;">
                 ${formatPrice(flight.price, currentCurrency)}
             </div>
@@ -711,7 +833,7 @@ function showFlightDetails(flight) {
         
         ${flight.link ? `
             <a href="${flight.link}" target="_blank" class="modal-book-btn">
-                🎫 Book This Flight
+                Book This Flight
             </a>
         ` : ''}
     `;

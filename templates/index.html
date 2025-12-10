@@ -12,14 +12,14 @@
 <body>
     <div class="container">
         <header>
-            <h1>✈️ MeetOnSamePage</h1>
+            <h1>MeetOnSamePage</h1>
             <p class="subtitle">Find the best flights for you and your friends to meet somewhere together</p>
         </header>
 
         <main>
             <form id="searchForm" class="search-form">
                 <div class="form-section">
-                    <h2>🛫 Departure Airports</h2>
+                    <h2>Departure Airports</h2>
                     <div class="airport-inputs">
                         <div class="input-group">
                             <label for="origin1">Person 1 - From</label>
@@ -41,16 +41,16 @@
                 </div>
 
                 <div class="form-section">
-                    <h2>🛬 Destination</h2>
+                    <h2>Destination</h2>
                     <div class="destination-type-toggle">
                         <button type="button" class="toggle-btn active" data-type="airport" onclick="setDestinationType('airport')">
-                            🛬 Airport
+                            Airport
                         </button>
                         <button type="button" class="toggle-btn" data-type="country" onclick="setDestinationType('country')">
-                            🌍 Country
+                            Country
                         </button>
                         <button type="button" class="toggle-btn" data-type="everywhere" onclick="setDestinationType('everywhere')">
-                            🌎 Everywhere
+                            Everywhere
                         </button>
                     </div>
                     <div class="input-group" id="airportDestGroup">
@@ -72,7 +72,6 @@
                     </div>
                     <div class="input-group" id="everywhereDestGroup" style="display: none;">
                         <div class="everywhere-info">
-                            <span class="everywhere-icon">🌎</span>
                             <div class="everywhere-text">
                                 <strong>Search Everywhere!</strong>
                                 <p>We'll find the top 10 cheapest destinations worldwide for both of you to meet.</p>
@@ -82,7 +81,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h2>📅 Travel Dates</h2>
+                    <h2>Travel Dates</h2>
                     <div class="date-inputs">
                         <div class="input-group">
                             <label for="dateFrom">From Date</label>
@@ -100,7 +99,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h2>💰 Currency</h2>
+                    <h2>Currency</h2>
                     <div class="input-group">
                         <select id="currency" name="currency">
                             <option value="EUR">EUR (€)</option>
@@ -113,7 +112,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h2>⚙️ Options</h2>
+                    <h2>Options</h2>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="directOnly" name="directOnly">
@@ -130,25 +129,29 @@
             </form>
 
             <div id="results" class="results-container" style="display: none;">
-                <h2>🎯 Search Results</h2>
+                <h2>Search Results</h2>
                 
                 <div id="destinationResults" class="destination-results" style="display: none;">
-                    <h3>🌍 Best Destinations Found</h3>
+                    <h3>Best Destinations Found</h3>
                     <div class="destinations-list"></div>
                 </div>
                 
                 <div id="bestMatch" class="best-match" style="display: none;">
-                    <h3>💡 Best Combined Option</h3>
+                    <h3>Best Combined Option</h3>
                     <div class="match-content"></div>
                 </div>
 
-                <div class="results-grid">
+                <div id="pairedFlights" class="paired-flights-container">
+                    <!-- Flights paired by date will be shown here -->
+                </div>
+
+                <div class="results-grid" style="display: none;">
                     <div id="results1" class="flight-results">
-                        <h3>✈️ Person 1 Flights</h3>
+                        <h3>Person 1 Flights</h3>
                         <div class="flights-list"></div>
                     </div>
                     <div id="results2" class="flight-results">
-                        <h3>✈️ Person 2 Flights</h3>
+                        <h3>Person 2 Flights</h3>
                         <div class="flights-list"></div>
                     </div>
                 </div>
@@ -161,7 +164,7 @@
         <div id="flightModal" class="modal" style="display: none;">
             <div class="modal-content">
                 <button class="modal-close" onclick="closeModal()">&times;</button>
-                <h2>✈️ Flight Details</h2>
+                <h2>Flight Details</h2>
                 <div id="modalBody" class="modal-body"></div>
             </div>
         </div>

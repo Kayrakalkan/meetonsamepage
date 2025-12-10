@@ -1,130 +1,113 @@
-# ✈️ MeetOnSamePage - Flight Finder
+# MeetOnSamePage - Flight Finder
 
-A flight search tool that finds the cheapest flights from multiple departure airports to a common destination. Perfect for couples or friends living in different cities who want to meet somewhere.
+Find the cheapest flights from two different cities to meet at a common destination. Perfect for long-distance couples, friends, or colleagues who want to meet somewhere in the middle.
 
-## 🎯 Features
+## Features
 
-- Search from **multiple departure airports** simultaneously
-- Find flights within a **date range** with specific trip duration
-- **Two search modes:**
-  - 🌐 **API Mode** (Recommended) - Uses Kiwi.com API, no bot detection issues
-  - 🕷️ **Scraper Mode** - Uses Playwright to scrape Skyscanner
+- **Airport Search**: Search flights to a specific airport
+- **Country Search**: Find the best airports to meet in a country
+- **Everywhere Search**: Discover the cheapest destinations worldwide
+- **Smart Matching**: Automatically finds dates when both travelers can fly
+- **Side-by-side Comparison**: View both travelers' flights paired by date
+- **Multi-currency Support**: EUR, USD, GBP, TRY, CHF
 
-## 📦 Installation
+## Live Demo
+
+🚀 [Visit MeetOnSamePage](https://meetonsamepage.onrender.com)
+
+## Deploy Your Own
+
+### Deploy to Render
+
+1. Fork this repository
+2. Create a free account on [Render](https://render.com)
+3. Click "New" → "Web Service"
+4. Connect your GitHub repository
+5. Render will auto-detect the configuration from `render.yaml`
+6. Add your environment variable:
+   - `KIWI_API_KEY`: Your Kiwi.com Tequila API key
+
+### Get a Free API Key
+
+1. Go to [Kiwi.com Tequila](https://tequila.kiwi.com/)
+2. Create a free account
+3. Get your API key (free tier: 3000 searches/month)
+
+## Local Development
+
+### Prerequisites
+
+- Python 3.11+
+- A Kiwi.com Tequila API key
+
+### Setup
 
 ```bash
-# Install Python dependencies
+# Clone the repository
+git clone https://github.com/Kayrakalkan/meetonsamepage.git
+cd meetonsamepage
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-# For scraper mode only: Install Playwright browsers
-playwright install chromium
+# Create environment file
+cp .env.example .env
+# Edit .env and add your KIWI_API_KEY
+
+# Run the server
+python app.py
 ```
 
-## � API Setup (Recommended)
+Open http://localhost:5000 in your browser.
 
-1. Go to [Kiwi.com Tequila](https://tequila.kiwi.com/) and create a free account
-2. Get your API key (free tier: 3000 searches/month)
-3. Create a `.env` file:
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your API key
-   ```
-
-## 🚀 Usage
-
-### API Mode (Recommended - No Bot Detection!)
-
-```bash
-# Search using Kiwi.com API
-python main.py --from BUD CGN --to ZRH --start 2025-12-15 --end 2025-12-30 --days 3 --api
-```
-
-### Scraper Mode (May Be Blocked)
-
-```bash
-# Basic scraper mode
-python main.py --from BUD CGN --to ZRH --start 2025-12-15 --end 2025-12-30 --days 3 --no-headless
-
-# With manual CAPTCHA solving
-python main.py --from BUD CGN --to ZRH --start 2025-12-15 --end 2025-12-30 --days 3 --no-headless --manual-captcha
-```
-
-### Arguments
-
-| Argument | Short | Required | Description |
-|----------|-------|----------|-------------|
-| `--from` | `-f` | ✅ | Departure airport codes (space-separated) |
-| `--to` | `-t` | ✅ | Arrival airport code |
-| `--start` | `-s` | ✅ | Start date (YYYY-MM-DD) |
-| `--end` | `-e` | ✅ | End date (YYYY-MM-DD) |
-| `--days` | `-d` | ✅ | Trip duration in days |
-| `--api` | | ❌ | Use Kiwi.com API (recommended) |
-| `--output` | `-o` | ❌ | Output file (default: flight_results.json) |
-| `--no-headless` | | ❌ | Show browser window (scraper mode) |
-| `--manual-captcha` | | ❌ | Manually solve CAPTCHAs (scraper mode) |
-
-## 📊 Output Format
-
-Results are saved as JSON:
-
-```json
-{
-  "parameters": {
-    "departure_airports": ["BUD", "CGN"],
-    "arrival_airport": "ZRH",
-    "date_from": "2025-12-15",
-    "date_to": "2025-12-30",
-    "trip_duration_days": 3
-  },
-  "results": {
-    "BUD": [
-      {
-        "departure_airport": "BUD",
-        "arrival_airport": "ZRH",
-        "departure_date": "2025-12-18",
-        "return_date": "2025-12-21",
-        "price": 89.0,
-        "currency": "EUR",
-        "airline": "Wizz Air",
-        "departure_time": "06:30",
-        "arrival_time": "08:15",
-        "duration": "1h 45m",
-        "stops": 0
-      }
-    ],
-    "CGN": [...]
-  },
-  "timestamp": "2025-12-05T10:30:00"
-}
-```
-
-## ⚠️ Notes
-
-- Skyscanner may block automated requests. Use reasonable delays between searches.
-- The scraper uses random delays (2-4 seconds) between requests to avoid detection.
-- For debugging, use `--no-headless` to see what's happening in the browser.
-
-## 🔧 Project Structure
+## Project Structure
 
 ```
 meetonsamepage/
-├── main.py           # CLI entry point
-├── scraper.py        # Playwright scraper logic
-├── models.py         # Pydantic data models
-├── requirements.txt  # Dependencies
-└── README.md         # This file
+├── app.py              # Flask web server
+├── api_scraper.py      # Kiwi.com API integration
+├── models.py           # Data models
+├── requirements.txt    # Python dependencies
+├── render.yaml         # Render deployment config
+├── Procfile            # Process file for deployment
+├── static/
+│   ├── airports.json   # Airport database (180+ airports)
+│   ├── script.js       # Frontend JavaScript
+│   └── style.css       # Styles
+└── templates/
+    └── index.html      # Main page
 ```
 
-## 📝 Airport Codes
+## Environment Variables
 
-Common airport codes:
-- **BUD** - Budapest
-- **CGN** - Cologne
-- **ZRH** - Zurich
-- **MUC** - Munich
-- **PRG** - Prague
-- **VIE** - Vienna
-- **BCN** - Barcelona
-- **FCO** - Rome
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `KIWI_API_KEY` | Your Kiwi.com Tequila API key | Yes |
+| `PORT` | Server port (default: 5000) | No |
+| `FLASK_ENV` | Set to `production` for production | No |
 
-Find more at [IATA Airport Codes](https://www.iata.org/en/publications/directories/code-search/)
+## API Limits
+
+The free Kiwi.com Tequila API tier includes:
+- 3,000 searches per month
+- Access to all flight data
+- No credit card required
+
+## Tech Stack
+
+- **Backend**: Python, Flask
+- **API**: Kiwi.com Tequila API
+- **Frontend**: Vanilla JavaScript, CSS
+- **Deployment**: Render
+
+## License
+
+MIT License - feel free to use and modify!
+
+---
+
+Made with ❤️ for long-distance friendships

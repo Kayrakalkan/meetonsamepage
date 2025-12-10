@@ -444,10 +444,12 @@ async def search_everywhere(
     trip_days: int,
     api_key: str,
     currency: str = "EUR",
-    direct_only: bool = False
+    direct_only: bool = False,
+    airports_list: list = None
 ) -> list:
     """
-    Search for cheapest destinations worldwide where both travelers can meet
+    Search all airports in our database to find the cheapest destinations 
+    where both travelers can meet.
     
     Args:
         origins: List of origin airport codes (e.g., ["BUD", "CGN"])
@@ -457,137 +459,83 @@ async def search_everywhere(
         api_key: Kiwi API key
         currency: Currency for prices
         direct_only: Only search direct flights
+        airports_list: List of airport codes to search through
     
     Returns:
         List of cheapest destinations with combined prices
     """
     api = KiwiFlightAPI(api_key)
     
-    print(f"🌍 Searching everywhere from {origins}...")
-    
-    # Get cheap flights from each origin to anywhere (one per city)
-    origin_flights = {}
-    all_destinations = set()
-    
-    for origin in origins:
-        print(f"🔍 Finding cheapest destinations from {origin}...")
-        
-        flights = await api.search_flights(
-            origin=origin,
-            destination="",  # Empty = anywhere
-            date_from=date_from,
-            date_to=date_to,
-            nights_from=trip_days,
-            nights_to=trip_days,
-            max_results=100,  # Get more results
-            currency=currency,
-            one_for_city=1,  # One result per city
-            direct_only=direct_only
-        )
-        
-        origin_flights[origin] = {}
-        for f in flights:
-            dest = f.arrival_airport
-            if dest not in origins:  # Don't include flights to the other origin
-                origin_flights[origin][dest] = f
-                all_destinations.add(dest)
-        
-        print(f"  ✅ Found {len(origin_flights[origin])} destinations from {origin}")
-        await asyncio.sleep(0.3)
-    
-    # Find common destinations that both can fly to
-    if len(origins) < 2:
+    if not airports_list:
         return []
     
-    origin1, origin2 = origins[0], origins[1]
-    destinations1 = set(origin_flights[origin1].keys())
-    destinations2 = set(origin_flights[origin2].keys())
+    # Filter out origins from destination list
+    destinations_to_check = [a for a in airports_list if a not in origins]
     
-    common_destinations = destinations1 & destinations2
-    print(f"🎯 Found {len(common_destinations)} common destinations directly")
+    print(f"🌍 Searching everywhere: checking {len(destinations_to_check)} destinations from {origins}...")
     
-    # If not enough common destinations, search for missing flights
-    if len(common_destinations) < 10:
-        # Get top destinations from origin1 that origin2 doesn't have
-        missing_for_origin2 = sorted(
-            [(dest, origin_flights[origin1][dest].price) for dest in destinations1 - destinations2],
-            key=lambda x: x[1]
-        )[:15]  # Check top 15 cheapest
-        
-        for dest, _ in missing_for_origin2:
-            try:
-                flights = await api.search_flights(
-                    origin=origin2,
-                    destination=dest,
-                    date_from=date_from,
-                    date_to=date_to,
-                    nights_from=trip_days,
-                    nights_to=trip_days,
-                    max_results=1,
-                    currency=currency,
-                    direct_only=direct_only
-                )
-                if flights:
-                    origin_flights[origin2][dest] = flights[0]
-                    common_destinations.add(dest)
-                await asyncio.sleep(0.15)
-            except:
-                pass
-        
-        # Also check top destinations from origin2 that origin1 doesn't have
-        missing_for_origin1 = sorted(
-            [(dest, origin_flights[origin2][dest].price) for dest in destinations2 - destinations1],
-            key=lambda x: x[1]
-        )[:15]
-        
-        for dest, _ in missing_for_origin1:
-            try:
-                flights = await api.search_flights(
-                    origin=origin1,
-                    destination=dest,
-                    date_from=date_from,
-                    date_to=date_to,
-                    nights_from=trip_days,
-                    nights_to=trip_days,
-                    max_results=1,
-                    currency=currency,
-                    direct_only=direct_only
-                )
-                if flights:
-                    origin_flights[origin1][dest] = flights[0]
-                    common_destinations.add(dest)
-                await asyncio.sleep(0.15)
-            except:
-                pass
-        
-        print(f"🎯 After additional searches: {len(common_destinations)} common destinations")
-    
-    # Calculate combined prices for common destinations
     results = []
+    checked = 0
     
-    for dest in common_destinations:
-        if dest in origin_flights[origin1] and dest in origin_flights[origin2]:
-            flight1 = origin_flights[origin1][dest]
-            flight2 = origin_flights[origin2][dest]
+    for dest in destinations_to_check:
+        checked += 1
+        if checked % 10 == 0:
+            print(f"  📍 Progress: {checked}/{len(destinations_to_check)} destinations checked...")
+        
+        dest_flights = {}
+        all_found = True
+        
+        # Search flights from each origin to this destination
+        for origin in origins:
+            try:
+                flights = await api.search_flights(
+                    origin=origin,
+                    destination=dest,
+                    date_from=date_from,
+                    date_to=date_to,
+                    nights_from=trip_days,
+                    nights_to=trip_days,
+                    max_results=5,
+                    currency=currency,
+                    direct_only=direct_only
+                )
+                
+                if flights:
+                    dest_flights[origin] = flights
+                else:
+                    all_found = False
+                    break
+                    
+                await asyncio.sleep(0.1)  # Small delay to avoid rate limiting
+                
+            except Exception as e:
+                all_found = False
+                break
+        
+        # If we found flights from both origins, find best match
+        if all_found and len(dest_flights) == len(origins):
+            best_matches = find_best_date_matches(dest_flights, origins)
             
-            combined_price = flight1.price + flight2.price
-            
-            results.append({
-                "destination": dest,
-                "combined_price": combined_price,
-                "currency": currency,
-                "departure_date": flight1.departure_date,
-                "return_date": flight1.return_date,
-                "flights": [
-                    flight1.model_dump(),
-                    flight2.model_dump()
-                ]
-            })
+            if best_matches:
+                best = best_matches[0]
+                results.append({
+                    "destination": dest,
+                    "combined_price": best["combined_price"],
+                    "currency": currency,
+                    "departure_date": best["departure_date"],
+                    "return_date": best["return_date"],
+                    "flights": best["flights"]
+                })
+                print(f"  ✅ {dest}: {currency} {best['combined_price']:.0f}")
+        
+        # Stop after finding 15 valid destinations to save API calls
+        if len(results) >= 15:
+            break
     
     # Sort by combined price and return top 10
     results.sort(key=lambda x: x["combined_price"])
     
-    print(f"✅ Returning top {min(10, len(results))} cheapest destinations")
+    print(f"🎯 Found {len(results)} destinations, returning top 10 cheapest")
     
     return results[:10]
 
