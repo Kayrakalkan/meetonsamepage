@@ -1,0 +1,303 @@
+{
+  "airports": [
+    {"code": "IST", "name": "Istanbul Airport", "city": "Istanbul", "country": "Turkey", "country_code": "TR"},
+    {"code": "SAW", "name": "Sabiha Gokcen", "city": "Istanbul", "country": "Turkey", "country_code": "TR"},
+    {"code": "AYT", "name": "Antalya Airport", "city": "Antalya", "country": "Turkey", "country_code": "TR"},
+    {"code": "ADB", "name": "Adnan Menderes", "city": "Izmir", "country": "Turkey", "country_code": "TR"},
+    {"code": "ESB", "name": "Esenboga Airport", "city": "Ankara", "country": "Turkey", "country_code": "TR"},
+    {"code": "BJV", "name": "Milas-Bodrum Airport", "city": "Bodrum", "country": "Turkey", "country_code": "TR"},
+    {"code": "DLM", "name": "Dalaman Airport", "city": "Dalaman", "country": "Turkey", "country_code": "TR"},
+    
+    {"code": "FRA", "name": "Frankfurt Airport", "city": "Frankfurt", "country": "Germany", "country_code": "DE"},
+    {"code": "MUC", "name": "Munich Airport", "city": "Munich", "country": "Germany", "country_code": "DE"},
+    {"code": "BER", "name": "Berlin Brandenburg", "city": "Berlin", "country": "Germany", "country_code": "DE"},
+    {"code": "DUS", "name": "Dusseldorf Airport", "city": "Dusseldorf", "country": "Germany", "country_code": "DE"},
+    {"code": "HAM", "name": "Hamburg Airport", "city": "Hamburg", "country": "Germany", "country_code": "DE"},
+    {"code": "CGN", "name": "Cologne Bonn Airport", "city": "Cologne", "country": "Germany", "country_code": "DE"},
+    {"code": "STR", "name": "Stuttgart Airport", "city": "Stuttgart", "country": "Germany", "country_code": "DE"},
+    {"code": "HAJ", "name": "Hannover Airport", "city": "Hannover", "country": "Germany", "country_code": "DE"},
+    {"code": "NUE", "name": "Nuremberg Airport", "city": "Nuremberg", "country": "Germany", "country_code": "DE"},
+    {"code": "LEJ", "name": "Leipzig Airport", "city": "Leipzig", "country": "Germany", "country_code": "DE"},
+    
+    {"code": "LHR", "name": "Heathrow Airport", "city": "London", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "LGW", "name": "Gatwick Airport", "city": "London", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "STN", "name": "Stansted Airport", "city": "London", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "LTN", "name": "Luton Airport", "city": "London", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "MAN", "name": "Manchester Airport", "city": "Manchester", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "EDI", "name": "Edinburgh Airport", "city": "Edinburgh", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "BHX", "name": "Birmingham Airport", "city": "Birmingham", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "GLA", "name": "Glasgow Airport", "city": "Glasgow", "country": "United Kingdom", "country_code": "GB"},
+    {"code": "BRS", "name": "Bristol Airport", "city": "Bristol", "country": "United Kingdom", "country_code": "GB"},
+    
+    {"code": "CDG", "name": "Charles de Gaulle", "city": "Paris", "country": "France", "country_code": "FR"},
+    {"code": "ORY", "name": "Orly Airport", "city": "Paris", "country": "France", "country_code": "FR"},
+    {"code": "NCE", "name": "Nice Cote d'Azur", "city": "Nice", "country": "France", "country_code": "FR"},
+    {"code": "LYS", "name": "Lyon Airport", "city": "Lyon", "country": "France", "country_code": "FR"},
+    {"code": "MRS", "name": "Marseille Airport", "city": "Marseille", "country": "France", "country_code": "FR"},
+    {"code": "TLS", "name": "Toulouse Airport", "city": "Toulouse", "country": "France", "country_code": "FR"},
+    {"code": "BOD", "name": "Bordeaux Airport", "city": "Bordeaux", "country": "France", "country_code": "FR"},
+    
+    {"code": "AMS", "name": "Schiphol Airport", "city": "Amsterdam", "country": "Netherlands", "country_code": "NL"},
+    {"code": "EIN", "name": "Eindhoven Airport", "city": "Eindhoven", "country": "Netherlands", "country_code": "NL"},
+    {"code": "RTM", "name": "Rotterdam Airport", "city": "Rotterdam", "country": "Netherlands", "country_code": "NL"},
+    
+    {"code": "MAD", "name": "Barajas Airport", "city": "Madrid", "country": "Spain", "country_code": "ES"},
+    {"code": "BCN", "name": "El Prat Airport", "city": "Barcelona", "country": "Spain", "country_code": "ES"},
+    {"code": "PMI", "name": "Palma de Mallorca", "city": "Palma", "country": "Spain", "country_code": "ES"},
+    {"code": "AGP", "name": "Malaga Airport", "city": "Malaga", "country": "Spain", "country_code": "ES"},
+    {"code": "ALC", "name": "Alicante Airport", "city": "Alicante", "country": "Spain", "country_code": "ES"},
+    {"code": "VLC", "name": "Valencia Airport", "city": "Valencia", "country": "Spain", "country_code": "ES"},
+    {"code": "SVQ", "name": "Seville Airport", "city": "Seville", "country": "Spain", "country_code": "ES"},
+    {"code": "IBZ", "name": "Ibiza Airport", "city": "Ibiza", "country": "Spain", "country_code": "ES"},
+    {"code": "TFS", "name": "Tenerife South", "city": "Tenerife", "country": "Spain", "country_code": "ES"},
+    {"code": "LPA", "name": "Gran Canaria", "city": "Las Palmas", "country": "Spain", "country_code": "ES"},
+    
+    {"code": "FCO", "name": "Fiumicino Airport", "city": "Rome", "country": "Italy", "country_code": "IT"},
+    {"code": "MXP", "name": "Malpensa Airport", "city": "Milan", "country": "Italy", "country_code": "IT"},
+    {"code": "LIN", "name": "Linate Airport", "city": "Milan", "country": "Italy", "country_code": "IT"},
+    {"code": "VCE", "name": "Marco Polo Airport", "city": "Venice", "country": "Italy", "country_code": "IT"},
+    {"code": "NAP", "name": "Naples Airport", "city": "Naples", "country": "Italy", "country_code": "IT"},
+    {"code": "FLR", "name": "Florence Airport", "city": "Florence", "country": "Italy", "country_code": "IT"},
+    {"code": "BLQ", "name": "Bologna Airport", "city": "Bologna", "country": "Italy", "country_code": "IT"},
+    {"code": "PSA", "name": "Pisa Airport", "city": "Pisa", "country": "Italy", "country_code": "IT"},
+    {"code": "CTA", "name": "Catania Airport", "city": "Catania", "country": "Italy", "country_code": "IT"},
+    {"code": "PMO", "name": "Palermo Airport", "city": "Palermo", "country": "Italy", "country_code": "IT"},
+    
+    {"code": "ZRH", "name": "Zurich Airport", "city": "Zurich", "country": "Switzerland", "country_code": "CH"},
+    {"code": "GVA", "name": "Geneva Airport", "city": "Geneva", "country": "Switzerland", "country_code": "CH"},
+    {"code": "BSL", "name": "Basel Airport", "city": "Basel", "country": "Switzerland", "country_code": "CH"},
+    
+    {"code": "VIE", "name": "Vienna Airport", "city": "Vienna", "country": "Austria", "country_code": "AT"},
+    {"code": "SZG", "name": "Salzburg Airport", "city": "Salzburg", "country": "Austria", "country_code": "AT"},
+    {"code": "INN", "name": "Innsbruck Airport", "city": "Innsbruck", "country": "Austria", "country_code": "AT"},
+    
+    {"code": "BRU", "name": "Brussels Airport", "city": "Brussels", "country": "Belgium", "country_code": "BE"},
+    {"code": "CRL", "name": "Charleroi Airport", "city": "Charleroi", "country": "Belgium", "country_code": "BE"},
+    
+    {"code": "LIS", "name": "Lisbon Airport", "city": "Lisbon", "country": "Portugal", "country_code": "PT"},
+    {"code": "OPO", "name": "Porto Airport", "city": "Porto", "country": "Portugal", "country_code": "PT"},
+    {"code": "FAO", "name": "Faro Airport", "city": "Faro", "country": "Portugal", "country_code": "PT"},
+    {"code": "FNC", "name": "Madeira Airport", "city": "Funchal", "country": "Portugal", "country_code": "PT"},
+    
+    {"code": "ATH", "name": "Athens Airport", "city": "Athens", "country": "Greece", "country_code": "GR"},
+    {"code": "SKG", "name": "Thessaloniki Airport", "city": "Thessaloniki", "country": "Greece", "country_code": "GR"},
+    {"code": "HER", "name": "Heraklion Airport", "city": "Heraklion", "country": "Greece", "country_code": "GR"},
+    {"code": "RHO", "name": "Rhodes Airport", "city": "Rhodes", "country": "Greece", "country_code": "GR"},
+    {"code": "CFU", "name": "Corfu Airport", "city": "Corfu", "country": "Greece", "country_code": "GR"},
+    {"code": "JTR", "name": "Santorini Airport", "city": "Santorini", "country": "Greece", "country_code": "GR"},
+    {"code": "JMK", "name": "Mykonos Airport", "city": "Mykonos", "country": "Greece", "country_code": "GR"},
+    
+    {"code": "WAW", "name": "Chopin Airport", "city": "Warsaw", "country": "Poland", "country_code": "PL"},
+    {"code": "KRK", "name": "Krakow Airport", "city": "Krakow", "country": "Poland", "country_code": "PL"},
+    {"code": "GDN", "name": "Gdansk Airport", "city": "Gdansk", "country": "Poland", "country_code": "PL"},
+    {"code": "WRO", "name": "Wroclaw Airport", "city": "Wroclaw", "country": "Poland", "country_code": "PL"},
+    {"code": "POZ", "name": "Poznan Airport", "city": "Poznan", "country": "Poland", "country_code": "PL"},
+    
+    {"code": "PRG", "name": "Vaclav Havel Airport", "city": "Prague", "country": "Czech Republic", "country_code": "CZ"},
+    {"code": "BRQ", "name": "Brno Airport", "city": "Brno", "country": "Czech Republic", "country_code": "CZ"},
+    
+    {"code": "BUD", "name": "Budapest Airport", "city": "Budapest", "country": "Hungary", "country_code": "HU"},
+    
+    {"code": "OTP", "name": "Otopeni Airport", "city": "Bucharest", "country": "Romania", "country_code": "RO"},
+    {"code": "CLJ", "name": "Cluj Airport", "city": "Cluj-Napoca", "country": "Romania", "country_code": "RO"},
+    
+    {"code": "SOF", "name": "Sofia Airport", "city": "Sofia", "country": "Bulgaria", "country_code": "BG"},
+    {"code": "VAR", "name": "Varna Airport", "city": "Varna", "country": "Bulgaria", "country_code": "BG"},
+    {"code": "BOJ", "name": "Burgas Airport", "city": "Burgas", "country": "Bulgaria", "country_code": "BG"},
+    
+    {"code": "BEG", "name": "Belgrade Airport", "city": "Belgrade", "country": "Serbia", "country_code": "RS"},
+    
+    {"code": "ZAG", "name": "Zagreb Airport", "city": "Zagreb", "country": "Croatia", "country_code": "HR"},
+    {"code": "SPU", "name": "Split Airport", "city": "Split", "country": "Croatia", "country_code": "HR"},
+    {"code": "DBV", "name": "Dubrovnik Airport", "city": "Dubrovnik", "country": "Croatia", "country_code": "HR"},
+    
+    {"code": "LJU", "name": "Ljubljana Airport", "city": "Ljubljana", "country": "Slovenia", "country_code": "SI"},
+    
+    {"code": "CPH", "name": "Copenhagen Airport", "city": "Copenhagen", "country": "Denmark", "country_code": "DK"},
+    {"code": "BLL", "name": "Billund Airport", "city": "Billund", "country": "Denmark", "country_code": "DK"},
+    
+    {"code": "ARN", "name": "Arlanda Airport", "city": "Stockholm", "country": "Sweden", "country_code": "SE"},
+    {"code": "GOT", "name": "Landvetter Airport", "city": "Gothenburg", "country": "Sweden", "country_code": "SE"},
+    {"code": "MMX", "name": "Malmo Airport", "city": "Malmo", "country": "Sweden", "country_code": "SE"},
+    
+    {"code": "OSL", "name": "Gardermoen Airport", "city": "Oslo", "country": "Norway", "country_code": "NO"},
+    {"code": "BGO", "name": "Bergen Airport", "city": "Bergen", "country": "Norway", "country_code": "NO"},
+    {"code": "TRD", "name": "Trondheim Airport", "city": "Trondheim", "country": "Norway", "country_code": "NO"},
+    
+    {"code": "HEL", "name": "Helsinki Airport", "city": "Helsinki", "country": "Finland", "country_code": "FI"},
+    {"code": "TMP", "name": "Tampere Airport", "city": "Tampere", "country": "Finland", "country_code": "FI"},
+    
+    {"code": "DUB", "name": "Dublin Airport", "city": "Dublin", "country": "Ireland", "country_code": "IE"},
+    {"code": "ORK", "name": "Cork Airport", "city": "Cork", "country": "Ireland", "country_code": "IE"},
+    {"code": "SNN", "name": "Shannon Airport", "city": "Shannon", "country": "Ireland", "country_code": "IE"},
+    
+    {"code": "KEF", "name": "Keflavik Airport", "city": "Reykjavik", "country": "Iceland", "country_code": "IS"},
+    
+    {"code": "TLV", "name": "Ben Gurion Airport", "city": "Tel Aviv", "country": "Israel", "country_code": "IL"},
+    
+    {"code": "DXB", "name": "Dubai International", "city": "Dubai", "country": "United Arab Emirates", "country_code": "AE"},
+    {"code": "AUH", "name": "Abu Dhabi Airport", "city": "Abu Dhabi", "country": "United Arab Emirates", "country_code": "AE"},
+    
+    {"code": "DOH", "name": "Hamad Airport", "city": "Doha", "country": "Qatar", "country_code": "QA"},
+    
+    {"code": "CAI", "name": "Cairo Airport", "city": "Cairo", "country": "Egypt", "country_code": "EG"},
+    {"code": "HRG", "name": "Hurghada Airport", "city": "Hurghada", "country": "Egypt", "country_code": "EG"},
+    {"code": "SSH", "name": "Sharm el-Sheikh", "city": "Sharm el-Sheikh", "country": "Egypt", "country_code": "EG"},
+    
+    {"code": "CMN", "name": "Mohammed V Airport", "city": "Casablanca", "country": "Morocco", "country_code": "MA"},
+    {"code": "RAK", "name": "Marrakech Airport", "city": "Marrakech", "country": "Morocco", "country_code": "MA"},
+    {"code": "AGA", "name": "Agadir Airport", "city": "Agadir", "country": "Morocco", "country_code": "MA"},
+    
+    {"code": "TUN", "name": "Tunis Airport", "city": "Tunis", "country": "Tunisia", "country_code": "TN"},
+    
+    {"code": "JFK", "name": "John F. Kennedy", "city": "New York", "country": "United States", "country_code": "US"},
+    {"code": "EWR", "name": "Newark Airport", "city": "Newark", "country": "United States", "country_code": "US"},
+    {"code": "LAX", "name": "Los Angeles Airport", "city": "Los Angeles", "country": "United States", "country_code": "US"},
+    {"code": "ORD", "name": "O'Hare Airport", "city": "Chicago", "country": "United States", "country_code": "US"},
+    {"code": "MIA", "name": "Miami Airport", "city": "Miami", "country": "United States", "country_code": "US"},
+    {"code": "SFO", "name": "San Francisco Airport", "city": "San Francisco", "country": "United States", "country_code": "US"},
+    {"code": "BOS", "name": "Logan Airport", "city": "Boston", "country": "United States", "country_code": "US"},
+    {"code": "ATL", "name": "Hartsfield-Jackson", "city": "Atlanta", "country": "United States", "country_code": "US"},
+    {"code": "DFW", "name": "Dallas Fort Worth", "city": "Dallas", "country": "United States", "country_code": "US"},
+    {"code": "DEN", "name": "Denver Airport", "city": "Denver", "country": "United States", "country_code": "US"},
+    {"code": "SEA", "name": "Seattle-Tacoma", "city": "Seattle", "country": "United States", "country_code": "US"},
+    {"code": "LAS", "name": "McCarran Airport", "city": "Las Vegas", "country": "United States", "country_code": "US"},
+    
+    {"code": "YYZ", "name": "Pearson Airport", "city": "Toronto", "country": "Canada", "country_code": "CA"},
+    {"code": "YVR", "name": "Vancouver Airport", "city": "Vancouver", "country": "Canada", "country_code": "CA"},
+    {"code": "YUL", "name": "Trudeau Airport", "city": "Montreal", "country": "Canada", "country_code": "CA"},
+    
+    {"code": "MEX", "name": "Mexico City Airport", "city": "Mexico City", "country": "Mexico", "country_code": "MX"},
+    {"code": "CUN", "name": "Cancun Airport", "city": "Cancun", "country": "Mexico", "country_code": "MX"},
+    
+    {"code": "GRU", "name": "Guarulhos Airport", "city": "Sao Paulo", "country": "Brazil", "country_code": "BR"},
+    {"code": "GIG", "name": "Galeao Airport", "city": "Rio de Janeiro", "country": "Brazil", "country_code": "BR"},
+    
+    {"code": "EZE", "name": "Ezeiza Airport", "city": "Buenos Aires", "country": "Argentina", "country_code": "AR"},
+    
+    {"code": "SCL", "name": "Santiago Airport", "city": "Santiago", "country": "Chile", "country_code": "CL"},
+    
+    {"code": "BOG", "name": "El Dorado Airport", "city": "Bogota", "country": "Colombia", "country_code": "CO"},
+    
+    {"code": "LIM", "name": "Jorge Chavez Airport", "city": "Lima", "country": "Peru", "country_code": "PE"},
+    
+    {"code": "NRT", "name": "Narita Airport", "city": "Tokyo", "country": "Japan", "country_code": "JP"},
+    {"code": "HND", "name": "Haneda Airport", "city": "Tokyo", "country": "Japan", "country_code": "JP"},
+    {"code": "KIX", "name": "Kansai Airport", "city": "Osaka", "country": "Japan", "country_code": "JP"},
+    
+    {"code": "ICN", "name": "Incheon Airport", "city": "Seoul", "country": "South Korea", "country_code": "KR"},
+    
+    {"code": "PEK", "name": "Beijing Capital", "city": "Beijing", "country": "China", "country_code": "CN"},
+    {"code": "PVG", "name": "Pudong Airport", "city": "Shanghai", "country": "China", "country_code": "CN"},
+    {"code": "HKG", "name": "Hong Kong Airport", "city": "Hong Kong", "country": "China", "country_code": "CN"},
+    
+    {"code": "SIN", "name": "Changi Airport", "city": "Singapore", "country": "Singapore", "country_code": "SG"},
+    
+    {"code": "BKK", "name": "Suvarnabhumi Airport", "city": "Bangkok", "country": "Thailand", "country_code": "TH"},
+    {"code": "HKT", "name": "Phuket Airport", "city": "Phuket", "country": "Thailand", "country_code": "TH"},
+    
+    {"code": "KUL", "name": "Kuala Lumpur Airport", "city": "Kuala Lumpur", "country": "Malaysia", "country_code": "MY"},
+    
+    {"code": "CGK", "name": "Soekarno-Hatta", "city": "Jakarta", "country": "Indonesia", "country_code": "ID"},
+    {"code": "DPS", "name": "Ngurah Rai Airport", "city": "Bali", "country": "Indonesia", "country_code": "ID"},
+    
+    {"code": "MNL", "name": "Ninoy Aquino Airport", "city": "Manila", "country": "Philippines", "country_code": "PH"},
+    
+    {"code": "DEL", "name": "Indira Gandhi Airport", "city": "Delhi", "country": "India", "country_code": "IN"},
+    {"code": "BOM", "name": "Chhatrapati Shivaji", "city": "Mumbai", "country": "India", "country_code": "IN"},
+    {"code": "BLR", "name": "Kempegowda Airport", "city": "Bangalore", "country": "India", "country_code": "IN"},
+    
+    {"code": "SYD", "name": "Sydney Airport", "city": "Sydney", "country": "Australia", "country_code": "AU"},
+    {"code": "MEL", "name": "Melbourne Airport", "city": "Melbourne", "country": "Australia", "country_code": "AU"},
+    {"code": "BNE", "name": "Brisbane Airport", "city": "Brisbane", "country": "Australia", "country_code": "AU"},
+    {"code": "PER", "name": "Perth Airport", "city": "Perth", "country": "Australia", "country_code": "AU"},
+    
+    {"code": "AKL", "name": "Auckland Airport", "city": "Auckland", "country": "New Zealand", "country_code": "NZ"},
+    {"code": "CHC", "name": "Christchurch Airport", "city": "Christchurch", "country": "New Zealand", "country_code": "NZ"},
+    
+    {"code": "JNB", "name": "O.R. Tambo Airport", "city": "Johannesburg", "country": "South Africa", "country_code": "ZA"},
+    {"code": "CPT", "name": "Cape Town Airport", "city": "Cape Town", "country": "South Africa", "country_code": "ZA"},
+    
+    {"code": "MLA", "name": "Malta Airport", "city": "Malta", "country": "Malta", "country_code": "MT"},
+    
+    {"code": "LCA", "name": "Larnaca Airport", "city": "Larnaca", "country": "Cyprus", "country_code": "CY"},
+    {"code": "PFO", "name": "Paphos Airport", "city": "Paphos", "country": "Cyprus", "country_code": "CY"},
+    
+    {"code": "RIX", "name": "Riga Airport", "city": "Riga", "country": "Latvia", "country_code": "LV"},
+    {"code": "VNO", "name": "Vilnius Airport", "city": "Vilnius", "country": "Lithuania", "country_code": "LT"},
+    {"code": "TLL", "name": "Tallinn Airport", "city": "Tallinn", "country": "Estonia", "country_code": "EE"},
+    
+    {"code": "LUX", "name": "Luxembourg Airport", "city": "Luxembourg", "country": "Luxembourg", "country_code": "LU"},
+    
+    {"code": "SKP", "name": "Skopje Airport", "city": "Skopje", "country": "North Macedonia", "country_code": "MK"},
+    {"code": "TIA", "name": "Tirana Airport", "city": "Tirana", "country": "Albania", "country_code": "AL"},
+    {"code": "SJJ", "name": "Sarajevo Airport", "city": "Sarajevo", "country": "Bosnia and Herzegovina", "country_code": "BA"},
+    {"code": "TGD", "name": "Podgorica Airport", "city": "Podgorica", "country": "Montenegro", "country_code": "ME"},
+    {"code": "PRN", "name": "Pristina Airport", "city": "Pristina", "country": "Kosovo", "country_code": "XK"}
+  ],
+  "countries": [
+    {"code": "TR", "name": "Turkey"},
+    {"code": "DE", "name": "Germany"},
+    {"code": "GB", "name": "United Kingdom"},
+    {"code": "FR", "name": "France"},
+    {"code": "NL", "name": "Netherlands"},
+    {"code": "ES", "name": "Spain"},
+    {"code": "IT", "name": "Italy"},
+    {"code": "CH", "name": "Switzerland"},
+    {"code": "AT", "name": "Austria"},
+    {"code": "BE", "name": "Belgium"},
+    {"code": "PT", "name": "Portugal"},
+    {"code": "GR", "name": "Greece"},
+    {"code": "PL", "name": "Poland"},
+    {"code": "CZ", "name": "Czech Republic"},
+    {"code": "HU", "name": "Hungary"},
+    {"code": "RO", "name": "Romania"},
+    {"code": "BG", "name": "Bulgaria"},
+    {"code": "RS", "name": "Serbia"},
+    {"code": "HR", "name": "Croatia"},
+    {"code": "SI", "name": "Slovenia"},
+    {"code": "DK", "name": "Denmark"},
+    {"code": "SE", "name": "Sweden"},
+    {"code": "NO", "name": "Norway"},
+    {"code": "FI", "name": "Finland"},
+    {"code": "IE", "name": "Ireland"},
+    {"code": "IS", "name": "Iceland"},
+    {"code": "IL", "name": "Israel"},
+    {"code": "AE", "name": "United Arab Emirates"},
+    {"code": "QA", "name": "Qatar"},
+    {"code": "EG", "name": "Egypt"},
+    {"code": "MA", "name": "Morocco"},
+    {"code": "TN", "name": "Tunisia"},
+    {"code": "US", "name": "United States"},
+    {"code": "CA", "name": "Canada"},
+    {"code": "MX", "name": "Mexico"},
+    {"code": "BR", "name": "Brazil"},
+    {"code": "AR", "name": "Argentina"},
+    {"code": "CL", "name": "Chile"},
+    {"code": "CO", "name": "Colombia"},
+    {"code": "PE", "name": "Peru"},
+    {"code": "JP", "name": "Japan"},
+    {"code": "KR", "name": "South Korea"},
+    {"code": "CN", "name": "China"},
+    {"code": "SG", "name": "Singapore"},
+    {"code": "TH", "name": "Thailand"},
+    {"code": "MY", "name": "Malaysia"},
+    {"code": "ID", "name": "Indonesia"},
+    {"code": "PH", "name": "Philippines"},
+    {"code": "IN", "name": "India"},
+    {"code": "AU", "name": "Australia"},
+    {"code": "NZ", "name": "New Zealand"},
+    {"code": "ZA", "name": "South Africa"},
+    {"code": "MT", "name": "Malta"},
+    {"code": "CY", "name": "Cyprus"},
+    {"code": "LV", "name": "Latvia"},
+    {"code": "LT", "name": "Lithuania"},
+    {"code": "EE", "name": "Estonia"},
+    {"code": "LU", "name": "Luxembourg"},
+    {"code": "MK", "name": "North Macedonia"},
+    {"code": "AL", "name": "Albania"},
+    {"code": "BA", "name": "Bosnia and Herzegovina"},
+    {"code": "ME", "name": "Montenegro"},
+    {"code": "XK", "name": "Kosovo"}
+  ]
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetOnSamePage - Find Common Flights</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✈️ MeetOnSamePage</h1>
+            <p class="subtitle">Find the best flights for you and your friends to meet somewhere together</p>
+        </header>
+
+        <main>
+            <form id="searchForm" class="search-form">
+                <div class="form-section">
+                    <h2>🛫 Departure Airports</h2>
+                    <div class="airport-inputs">
+                        <div class="input-group">
+                            <label for="origin1">Person 1 - From</label>
+                            <div class="airport-search-container">
+                                <input type="text" id="origin1" name="origin1" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
+                                <input type="hidden" id="origin1Code" name="origin1Code">
+                                <div id="origin1Dropdown" class="airport-dropdown"></div>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="origin2">Person 2 - From</label>
+                            <div class="airport-search-container">
+                                <input type="text" id="origin2" name="origin2" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
+                                <input type="hidden" id="origin2Code" name="origin2Code">
+                                <div id="origin2Dropdown" class="airport-dropdown"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>🛬 Destination</h2>
+                    <div class="destination-type-toggle">
+                        <button type="button" class="toggle-btn active" data-type="airport" onclick="setDestinationType('airport')">
+                            🛬 Airport
+                        </button>
+                        <button type="button" class="toggle-btn" data-type="country" onclick="setDestinationType('country')">
+                            🌍 Country
+                        </button>
+                        <button type="button" class="toggle-btn" data-type="everywhere" onclick="setDestinationType('everywhere')">
+                            🌎 Everywhere
+                        </button>
+                    </div>
+                    <div class="input-group" id="airportDestGroup">
+                        <label for="destination">Flying To (Airport)</label>
+                        <div class="airport-search-container">
+                            <input type="text" id="destination" name="destination" class="airport-search" placeholder="Search airport..." autocomplete="off">
+                            <input type="hidden" id="destinationCode" name="destinationCode">
+                            <div id="destinationDropdown" class="airport-dropdown"></div>
+                        </div>
+                    </div>
+                    <div class="input-group" id="countryDestGroup" style="display: none;">
+                        <label for="countryDestination">Flying To (Country)</label>
+                        <div class="airport-search-container">
+                            <input type="text" id="countryDestination" name="countryDestination" class="airport-search" placeholder="Search country..." autocomplete="off">
+                            <input type="hidden" id="countryCode" name="countryCode">
+                            <div id="countryDropdown" class="airport-dropdown"></div>
+                        </div>
+                        <p class="input-hint">We'll find the best airports in this country for both of you!</p>
+                    </div>
+                    <div class="input-group" id="everywhereDestGroup" style="display: none;">
+                        <div class="everywhere-info">
+                            <span class="everywhere-icon">🌎</span>
+                            <div class="everywhere-text">
+                                <strong>Search Everywhere!</strong>
+                                <p>We'll find the top 10 cheapest destinations worldwide for both of you to meet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>📅 Travel Dates</h2>
+                    <div class="date-inputs">
+                        <div class="input-group">
+                            <label for="dateFrom">From Date</label>
+                            <input type="date" id="dateFrom" name="dateFrom" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="dateTo">To Date</label>
+                            <input type="date" id="dateTo" name="dateTo" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="tripDays">Trip Duration (days)</label>
+                            <input type="number" id="tripDays" name="tripDays" min="1" max="30" value="3" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>💰 Currency</h2>
+                    <div class="input-group">
+                        <select id="currency" name="currency">
+                            <option value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="TRY">TRY (₺)</option>
+                            <option value="CHF">CHF</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>⚙️ Options</h2>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="directOnly" name="directOnly">
+                            <span class="checkbox-custom"></span>
+                            <span>Direct flights only (no stops)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="search-btn" id="searchBtn">
+                    <span class="btn-text">🔍 Search Flights</span>
+                    <span class="btn-loading" style="display: none;">⏳ Searching...</span>
+                </button>
+            </form>
+
+            <div id="results" class="results-container" style="display: none;">
+                <h2>🎯 Search Results</h2>
+                
+                <div id="destinationResults" class="destination-results" style="display: none;">
+                    <h3>🌍 Best Destinations Found</h3>
+                    <div class="destinations-list"></div>
+                </div>
+                
+                <div id="bestMatch" class="best-match" style="display: none;">
+                    <h3>💡 Best Combined Option</h3>
+                    <div class="match-content"></div>
+                </div>
+
+                <div class="results-grid">
+                    <div id="results1" class="flight-results">
+                        <h3>✈️ Person 1 Flights</h3>
+                        <div class="flights-list"></div>
+                    </div>
+                    <div id="results2" class="flight-results">
+                        <h3>✈️ Person 2 Flights</h3>
+                        <div class="flights-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error" class="error-message" style="display: none;"></div>
+        </main>
+
+        <!-- Flight Details Modal -->
+        <div id="flightModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2>✈️ Flight Details</h2>
+                <div id="modalBody" class="modal-body"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by Kiwi.com API | Made with ❤️ for long-distance friendships</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
