@@ -11,13 +11,16 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>MeetOnSamePage</h1>
-            <p class="subtitle">Find the best flights for you and your friends to meet somewhere together</p>
-        </header>
+        <!-- Tab Bar -->
+        <nav class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('search')">Search</button>
+            <button class="tab-btn" onclick="switchTab('info')">Info</button>
+        </nav>
 
-        <main>
-            <form id="searchForm" class="search-form">
+        <!-- Search Tab -->
+        <div id="searchTab" class="tab-content active">
+            <main>
+                <form id="searchForm" class="search-form">
                 <div class="form-section">
                     <h2>Departure Airports</h2>
                     <div class="airport-inputs">
@@ -158,7 +161,54 @@
             </div>
 
             <div id="error" class="error-message" style="display: none;"></div>
-        </main>
+            </main>
+        </div>
+
+        <!-- Info Tab -->
+        <div id="infoTab" class="tab-content">
+            <div class="info-page">
+                <h2>How to Use MeetOnSamePage</h2>
+                
+                <div class="info-section">
+                    <h3>1. Enter Departure Airports</h3>
+                    <p>Enter the airports where each person will be departing from. Start typing the city or airport code and select from the dropdown.</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>2. Choose Your Destination</h3>
+                    <p>You have three options:</p>
+                    <ul>
+                        <li><strong>Airport:</strong> Search for flights to a specific airport</li>
+                        <li><strong>Country:</strong> Find the best airports in a country for both of you</li>
+                        <li><strong>Everywhere:</strong> Discover the cheapest destinations worldwide</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3>3. Set Travel Dates</h3>
+                    <p>Choose your date range and trip duration. We'll find flights where both travelers can meet on the same dates.</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>4. View Results</h3>
+                    <p>Results show flight combinations sorted by total price. Each result displays:</p>
+                    <ul>
+                        <li>Combined total price for both travelers</li>
+                        <li>Individual flight details side by side</li>
+                        <li>Direct booking links to Kiwi.com</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3>Tips</h3>
+                    <ul>
+                        <li>Use "Direct flights only" for faster, simpler travel</li>
+                        <li>Try "Everywhere" search to discover unexpected cheap destinations</li>
+                        <li>Flexible dates give you more options</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <!-- Flight Details Modal -->
         <div id="flightModal" class="modal" style="display: none;">
@@ -168,10 +218,6 @@
                 <div id="modalBody" class="modal-body"></div>
             </div>
         </div>
-
-        <footer>
-            <p>Powered by Kiwi.com API | Made with ❤️ for long-distance friendships</p>
-        </footer>
     </div>
 
     <script src="/static/script.js"></script>

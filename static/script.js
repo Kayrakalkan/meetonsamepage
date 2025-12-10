@@ -4,6 +4,21 @@ let currentCurrency = 'EUR';
 let destinationType = 'airport'; // 'airport', 'country', or 'everywhere'
 let countriesData = [];
 
+// Tab switching function
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(tabName + 'Tab').classList.add('active');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('searchForm');
     const searchBtn = document.getElementById('searchBtn');
