@@ -259,11 +259,11 @@ async def search_and_find_best_match(params: SearchParameters, api_key: str, cur
     # Find best matching dates
     best_matches = find_best_date_matches(all_flights, params.departure_airports)
     
-    # Prepare results - top 5 per origin
+    # Prepare results - top 15 per origin (sorted by price)
     results = {}
     for origin, flights in all_flights.items():
         flights.sort(key=lambda x: x.price)
-        results[origin] = [f.model_dump() for f in flights[:5]]
+        results[origin] = [f.model_dump() for f in flights[:15]]
     
     return {
         "results": results,
@@ -342,7 +342,7 @@ def find_best_date_matches(all_flights: dict, origins: list) -> list:
                     ]
                 })
     
-    # Sort by combined price and return top 5
+    # Sort by combined price and return top 10
     matches.sort(key=lambda x: x["combined_price"])
     
     # Remove duplicates (same dates)
@@ -354,7 +354,7 @@ def find_best_date_matches(all_flights: dict, origins: list) -> list:
             seen_dates.add(date_key)
             unique_matches.append(match)
     
-    return unique_matches[:5]
+    return unique_matches[:10]
 
 
 async def search_best_destinations(
