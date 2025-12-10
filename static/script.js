@@ -497,6 +497,8 @@ function displayBestMatchesForDestSearch(matches, currency, isEverywhere) {
 }
 
 function displayResults(data, origin1, origin2, currency) {
+    console.log('displayResults called with best_matches:', data.best_matches?.length);
+    
     const resultsContainer = document.getElementById('results');
     let results1 = data.results[origin1] || [];
     let results2 = data.results[origin2] || [];
@@ -508,70 +510,44 @@ function displayResults(data, origin1, origin2, currency) {
     // Display best matches from backend
     displayBestMatches(data.best_matches, currency);
     
-    // Display paired flights (same dates side by side)
-    displayPairedFlights(results1, results2, origin1, origin2, data.best_matches, currency);
+    // Display paired flights using best_matches from backend (like country search)
+    console.log('Calling displayPairedFlightsForAirport with', data.best_matches?.length, 'matches');
+    displayPairedFlightsForAirport(data.best_matches, origin1, origin2, currency);
     
     resultsContainer.style.display = 'block';
     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Display flights paired by matching dates
-function displayPairedFlights(flights1, flights2, origin1, origin2, bestMatches, currency) {
+// Display paired flights for Airport search - uses best_matches from backend
+function displayPairedFlightsForAirport(bestMatches, origin1, origin2, currency) {
     const container = document.getElementById('pairedFlights');
     
-    // Create a map of flights by date for each origin
-    const flights1ByDate = {};
-    const flights2ByDate = {};
+    console.log('displayPairedFlightsForAirport - bestMatches:', bestMatches);
+    console.log('displayPairedFlightsForAirport - bestMatches length:', bestMatches?.length);
     
-    flights1.forEach(f => {
-        const key = f.departure_date + '_' + f.return_date;
-        if (!flights1ByDate[key]) flights1ByDate[key] = f;
-    });
-    
-    flights2.forEach(f => {
-        const key = f.departure_date + '_' + f.return_date;
-        if (!flights2ByDate[key]) flights2ByDate[key] = f;
-    });
-    
-    // Get best match date keys for highlighting
-    const bestDateKeys = (bestMatches || []).slice(0, 1).map(m => {
-        if (m.flights && m.flights[0]) {
-            return m.flights[0].departure_date + '_' + m.flights[0].return_date;
-        }
-        return null;
-    }).filter(k => k);
-    
-    // Find all common dates and create pairs
-    const allDateKeys = new Set([...Object.keys(flights1ByDate), ...Object.keys(flights2ByDate)]);
-    const pairs = [];
-    
-    allDateKeys.forEach(dateKey => {
-        const f1 = flights1ByDate[dateKey];
-        const f2 = flights2ByDate[dateKey];
-        
-        // Only show if both have flights on this date
-        if (f1 && f2) {
-            pairs.push({
-                dateKey,
-                flight1: f1,
-                flight2: f2,
-                combinedPrice: f1.price + f2.price,
-                isBest: bestDateKeys.includes(dateKey)
-            });
-        }
-    });
-    
-    // Sort by combined price
-    pairs.sort((a, b) => a.combinedPrice - b.combinedPrice);
-    
-    if (pairs.length === 0) {
-        container.innerHTML = '<div class="no-flights">No matching dates found for both origins</div>';
+    if (!bestMatches || bestMatches.length === 0) {
+        container.innerHTML = '<div class="no-flights">No matching flights found for both origins</div>';
         return;
     }
     
-    container.innerHTML = pairs.map((pair, index) => `
+    // Use best_matches directly - already sorted by combined price
+    const pairs = bestMatches.map((match, index) => ({
+        flight1: match.flights[0],
+        flight2: match.flights[1],
+        combinedPrice: match.combined_price,
+        isBest: index === 0
+    }));
+    
+    console.log('Pairs created:', pairs.length);
+    
+    container.innerHTML = `
+        <div class="pairs-header">
+            <h3>Flight Options (${pairs.length} combinations found)</h3>
+        </div>
+        ${pairs.map((pair, index) => `
         <div class="paired-flight-row ${pair.isBest ? 'best-row' : ''}">
             <div class="row-header">
+                <span class="row-number">#${index + 1}</span>
                 <span class="row-dates">${formatDisplayDate(pair.flight1.departure_date)} → ${formatDisplayDate(pair.flight1.return_date)}</span>
                 <span class="row-total">Total: ${formatPrice(pair.combinedPrice, currency)}</span>
             </div>
@@ -596,7 +572,9 @@ function displayPairedFlights(flights1, flights2, origin1, origin2, bestMatches,
                 </div>
             </div>
         </div>
-    `).join('');
+    `).join('')}`;
+    
+    console.log('Container HTML updated, innerHTML length:', container.innerHTML.length);
 }
 
 // Reorder flights so best matching flights appear at the top
@@ -683,22 +661,6 @@ function formatDisplayDate(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-function displayResults(data, origin1, origin2, currency) {
-    const resultsContainer = document.getElementById('results');
-    const results1 = data.results[origin1] || [];
-    const results2 = data.results[origin2] || [];
-    
-    // Display individual results
-    displayFlights('results1', results1, origin1, currency);
-    displayFlights('results2', results2, origin2, currency);
-    
-    // Display best matches from backend
-    displayBestMatches(data.best_matches, currency);
-    
-    resultsContainer.style.display = 'block';
-    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function displayFlights(containerId, flights, origin, currency) {

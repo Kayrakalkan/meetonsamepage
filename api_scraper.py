@@ -309,11 +309,8 @@ def find_best_date_matches(all_flights: dict, origins: list) -> list:
             flights2_by_date[date] = []
         flights2_by_date[date].append(f)
     
-    # Find matching dates (same day or within 1 day)
+    # Find matching dates (same day or within 1 day) - best per date
     for date1, f1_list in flights1_by_date.items():
-        # Get cheapest flight for this date from origin 1
-        cheapest_f1 = min(f1_list, key=lambda x: x.price)
-        
         # Look for same date or +/- 1 day from origin 2
         from datetime import datetime, timedelta
         
@@ -326,26 +323,28 @@ def find_best_date_matches(all_flights: dict, origins: list) -> list:
             check_date = (dt1 + timedelta(days=day_offset)).strftime("%Y-%m-%d")
             
             if check_date in flights2_by_date:
-                cheapest_f2 = min(flights2_by_date[check_date], key=lambda x: x.price)
-                
-                combined_price = cheapest_f1.price + cheapest_f2.price
+                # Find the CHEAPEST combination for this date pair
+                best_f1 = min(f1_list, key=lambda x: x.price)
+                best_f2 = min(flights2_by_date[check_date], key=lambda x: x.price)
+                combined_price = best_f1.price + best_f2.price
                 
                 matches.append({
                     "departure_date": date1,
-                    "return_date": cheapest_f1.return_date or "",
+                    "return_date": best_f1.return_date or "",
                     "combined_price": combined_price,
-                    "currency": cheapest_f1.currency,
+                    "currency": best_f1.currency,
                     "date_match": "same_day" if day_offset == 0 else f"{abs(day_offset)}_day_diff",
                     "flights": [
-                        cheapest_f1.model_dump(),
-                        cheapest_f2.model_dump()
+                        best_f1.model_dump(),
+                        best_f2.model_dump()
                     ]
                 })
+                break  # Only use same day if available, otherwise +/- 1 day
     
-    # Sort by combined price and return top 10
+    # Sort by combined price
     matches.sort(key=lambda x: x["combined_price"])
     
-    # Remove duplicates (same dates)
+    # Remove duplicate dates (keep only cheapest per date)
     seen_dates = set()
     unique_matches = []
     for match in matches:
@@ -354,7 +353,10 @@ def find_best_date_matches(all_flights: dict, origins: list) -> list:
             seen_dates.add(date_key)
             unique_matches.append(match)
     
-    return unique_matches[:10]
+    print(f"🔢 Total unique dates found: {len(unique_matches)}, returning top 20")
+    
+    # Return top 20 unique dates
+    return unique_matches[:20]
 
 
 async def search_best_destinations(

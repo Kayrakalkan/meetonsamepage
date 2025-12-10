@@ -121,9 +121,12 @@ footer { text-align: center; color: #888; margin-top: 24px; font-size: 0.8rem; }
 
 /* Paired Flights - Same dates side by side */
 .paired-flights-container { display: flex; flex-direction: column; gap: 16px; }
+.pairs-header { text-align: center; margin-bottom: 8px; }
+.pairs-header h3 { color: #333; font-size: 1rem; font-weight: 600; }
 .paired-flight-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #fafafa; border-radius: 10px; padding: 16px; border: 1px solid #e5e5e5; }
 .paired-flight-row.best-row { background: #f0fdf4; border-color: #22c55e; }
 .paired-flight-row .row-header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+.paired-flight-row .row-number { background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; }
 .paired-flight-row .row-dates { font-weight: 600; color: #333; font-size: 0.95rem; }
 .paired-flight-row .row-total { font-weight: 700; color: #333; font-size: 1.1rem; }
 .paired-flight-row.best-row .row-total { color: #22c55e; }
