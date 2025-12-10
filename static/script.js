@@ -19,6 +19,43 @@ function switchTab(tabName) {
     document.getElementById(tabName + 'Tab').classList.add('active');
 }
 
+// Toast notification system
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
+    };
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type]}</div>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
+}
+
+// Subscribe form handler
+function handleSubscribe(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('input[type="email"]').value;
+    
+    // For now, just show a success message (no backend)
+    showToast('Thanks for subscribing! We\'ll keep you updated.', 'success');
+    event.target.reset();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('searchForm');
     const searchBtn = document.getElementById('searchBtn');

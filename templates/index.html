@@ -1,168 +1,453 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeetOnSamePage - Find Common Flights</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <!-- Tab Bar -->
+<!DOCTYPE html><!DOCTYPE html>
+
+<html lang="en"><html lang="en">
+
+<head><head>
+
+    <meta charset="UTF-8">    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MeetOnSamePage - Find Common Flights</title>    <title>MeetOnSamePage - Find Common Flights</title>
+
+    <link rel="stylesheet" href="/static/style.css">    <link rel="stylesheet" href="/static/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head></head>
+
+<body><body>
+
+    <!-- Toast Container -->    <div class="container">
+
+    <div id="toastContainer" class="toast-container"></div>        <!-- Tab Bar -->
+
         <nav class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('search')">Search</button>
-            <button class="tab-btn" onclick="switchTab('info')">Info</button>
-        </nav>
 
-        <!-- Search Tab -->
-        <div id="searchTab" class="tab-content active">
-            <main>
-                <form id="searchForm" class="search-form">
-                <div class="form-section">
-                    <h2>Departure Airports</h2>
-                    <div class="airport-inputs">
-                        <div class="input-group">
-                            <label for="origin1">Person 1 - From</label>
-                            <div class="airport-search-container">
-                                <input type="text" id="origin1" name="origin1" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
-                                <input type="hidden" id="origin1Code" name="origin1Code">
-                                <div id="origin1Dropdown" class="airport-dropdown"></div>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <label for="origin2">Person 2 - From</label>
-                            <div class="airport-search-container">
-                                <input type="text" id="origin2" name="origin2" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
-                                <input type="hidden" id="origin2Code" name="origin2Code">
-                                <div id="origin2Dropdown" class="airport-dropdown"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="container">            <button class="tab-btn active" onclick="switchTab('search')">Search</button>
+
+        <!-- Header with Logo -->            <button class="tab-btn" onclick="switchTab('info')">Info</button>
+
+        <header class="header">        </nav>
+
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>        <!-- Search Tab -->
+
+            </svg>        <div id="searchTab" class="tab-content active">
+
+            <span class="logo-text">MeetOnSamePage</span>            <main>
+
+        </header>                <form id="searchForm" class="search-form">
 
                 <div class="form-section">
-                    <h2>Destination</h2>
-                    <div class="destination-type-toggle">
-                        <button type="button" class="toggle-btn active" data-type="airport" onclick="setDestinationType('airport')">
-                            Airport
-                        </button>
-                        <button type="button" class="toggle-btn" data-type="country" onclick="setDestinationType('country')">
-                            Country
-                        </button>
+
+        <!-- Tab Bar -->                    <h2>Departure Airports</h2>
+
+        <nav class="tab-bar">                    <div class="airport-inputs">
+
+            <div class="tab-buttons">                        <div class="input-group">
+
+                <button class="tab-btn active" onclick="switchTab('search')">                            <label for="origin1">Person 1 - From</label>
+
+                    <span>                            <div class="airport-search-container">
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">                                <input type="text" id="origin1" name="origin1" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
+
+                            <circle cx="11" cy="11" r="8"></circle>                                <input type="hidden" id="origin1Code" name="origin1Code">
+
+                            <path d="m21 21-4.3-4.3"></path>                                <div id="origin1Dropdown" class="airport-dropdown"></div>
+
+                        </svg>                            </div>
+
+                        Search                        </div>
+
+                    </span>                        <div class="input-group">
+
+                </button>                            <label for="origin2">Person 2 - From</label>
+
+                <button class="tab-btn" onclick="switchTab('info')">                            <div class="airport-search-container">
+
+                    <span>                                <input type="text" id="origin2" name="origin2" class="airport-search" placeholder="Search airport..." autocomplete="off" required>
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">                                <input type="hidden" id="origin2Code" name="origin2Code">
+
+                            <circle cx="12" cy="12" r="10"></circle>                                <div id="origin2Dropdown" class="airport-dropdown"></div>
+
+                            <path d="M12 16v-4"></path>                            </div>
+
+                            <path d="M12 8h.01"></path>                        </div>
+
+                        </svg>                    </div>
+
+                        Info                </div>
+
+                    </span>
+
+                </button>                <div class="form-section">
+
+            </div>                    <h2>Destination</h2>
+
+            <button class="profile-btn" onclick="showToast('Coming soon! Sign up to get notified.', 'info')">                    <div class="destination-type-toggle">
+
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">                        <button type="button" class="toggle-btn active" data-type="airport" onclick="setDestinationType('airport')">
+
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>                            Airport
+
+                    <circle cx="12" cy="7" r="4"></circle>                        </button>
+
+                </svg>                        <button type="button" class="toggle-btn" data-type="country" onclick="setDestinationType('country')">
+
+            </button>                            Country
+
+        </nav>                        </button>
+
                         <button type="button" class="toggle-btn" data-type="everywhere" onclick="setDestinationType('everywhere')">
-                            Everywhere
-                        </button>
-                    </div>
-                    <div class="input-group" id="airportDestGroup">
-                        <label for="destination">Flying To (Airport)</label>
-                        <div class="airport-search-container">
-                            <input type="text" id="destination" name="destination" class="airport-search" placeholder="Search airport..." autocomplete="off">
-                            <input type="hidden" id="destinationCode" name="destinationCode">
-                            <div id="destinationDropdown" class="airport-dropdown"></div>
-                        </div>
-                    </div>
-                    <div class="input-group" id="countryDestGroup" style="display: none;">
-                        <label for="countryDestination">Flying To (Country)</label>
-                        <div class="airport-search-container">
-                            <input type="text" id="countryDestination" name="countryDestination" class="airport-search" placeholder="Search country..." autocomplete="off">
-                            <input type="hidden" id="countryCode" name="countryCode">
-                            <div id="countryDropdown" class="airport-dropdown"></div>
-                        </div>
-                        <p class="input-hint">We'll find the best airports in this country for both of you!</p>
-                    </div>
-                    <div class="input-group" id="everywhereDestGroup" style="display: none;">
-                        <div class="everywhere-info">
-                            <div class="everywhere-text">
-                                <strong>Search Everywhere!</strong>
-                                <p>We'll find the top 10 cheapest destinations worldwide for both of you to meet.</p>
+
+        <!-- Search Tab -->                            Everywhere
+
+        <div id="searchTab" class="tab-content active">                        </button>
+
+            <main>                    </div>
+
+                <form id="searchForm" class="search-form">                    <div class="input-group" id="airportDestGroup">
+
+                <div class="form-section">                        <label for="destination">Flying To (Airport)</label>
+
+                    <h2>Departure Airports</h2>                        <div class="airport-search-container">
+
+                    <div class="airport-inputs">                            <input type="text" id="destination" name="destination" class="airport-search" placeholder="Search airport..." autocomplete="off">
+
+                        <div class="input-group">                            <input type="hidden" id="destinationCode" name="destinationCode">
+
+                            <label for="origin1">Person 1 - From</label>                            <div id="destinationDropdown" class="airport-dropdown"></div>
+
+                            <div class="airport-search-container">                        </div>
+
+                                <input type="text" id="origin1" name="origin1" class="airport-search" placeholder="Search airport..." autocomplete="off" required>                    </div>
+
+                                <input type="hidden" id="origin1Code" name="origin1Code">                    <div class="input-group" id="countryDestGroup" style="display: none;">
+
+                                <div id="origin1Dropdown" class="airport-dropdown"></div>                        <label for="countryDestination">Flying To (Country)</label>
+
+                            </div>                        <div class="airport-search-container">
+
+                        </div>                            <input type="text" id="countryDestination" name="countryDestination" class="airport-search" placeholder="Search country..." autocomplete="off">
+
+                        <div class="input-group">                            <input type="hidden" id="countryCode" name="countryCode">
+
+                            <label for="origin2">Person 2 - From</label>                            <div id="countryDropdown" class="airport-dropdown"></div>
+
+                            <div class="airport-search-container">                        </div>
+
+                                <input type="text" id="origin2" name="origin2" class="airport-search" placeholder="Search airport..." autocomplete="off" required>                        <p class="input-hint">We'll find the best airports in this country for both of you!</p>
+
+                                <input type="hidden" id="origin2Code" name="origin2Code">                    </div>
+
+                                <div id="origin2Dropdown" class="airport-dropdown"></div>                    <div class="input-group" id="everywhereDestGroup" style="display: none;">
+
+                            </div>                        <div class="everywhere-info">
+
+                        </div>                            <div class="everywhere-text">
+
+                    </div>                                <strong>Search Everywhere!</strong>
+
+                </div>                                <p>We'll find the top 10 cheapest destinations worldwide for both of you to meet.</p>
+
                             </div>
-                        </div>
-                    </div>
+
+                <div class="form-section">                        </div>
+
+                    <h2>Destination</h2>                    </div>
+
+                    <div class="destination-type-toggle">                </div>
+
+                        <button type="button" class="toggle-btn active" data-type="airport" onclick="setDestinationType('airport')">
+
+                            Airport                <div class="form-section">
+
+                        </button>                    <h2>Travel Dates</h2>
+
+                        <button type="button" class="toggle-btn" data-type="country" onclick="setDestinationType('country')">                    <div class="date-inputs">
+
+                            Country                        <div class="input-group">
+
+                        </button>                            <label for="dateFrom">From Date</label>
+
+                        <button type="button" class="toggle-btn" data-type="everywhere" onclick="setDestinationType('everywhere')">                            <input type="date" id="dateFrom" name="dateFrom" required>
+
+                            Everywhere                        </div>
+
+                        </button>                        <div class="input-group">
+
+                    </div>                            <label for="dateTo">To Date</label>
+
+                    <div class="input-group" id="airportDestGroup">                            <input type="date" id="dateTo" name="dateTo" required>
+
+                        <label for="destination">Flying To (Airport)</label>                        </div>
+
+                        <div class="airport-search-container">                        <div class="input-group">
+
+                            <input type="text" id="destination" name="destination" class="airport-search" placeholder="Search airport..." autocomplete="off">                            <label for="tripDays">Trip Duration (days)</label>
+
+                            <input type="hidden" id="destinationCode" name="destinationCode">                            <input type="number" id="tripDays" name="tripDays" min="1" max="30" value="3" required>
+
+                            <div id="destinationDropdown" class="airport-dropdown"></div>                        </div>
+
+                        </div>                    </div>
+
+                    </div>                </div>
+
+                    <div class="input-group" id="countryDestGroup" style="display: none;">
+
+                        <label for="countryDestination">Flying To (Country)</label>                <div class="form-section">
+
+                        <div class="airport-search-container">                    <h2>Currency</h2>
+
+                            <input type="text" id="countryDestination" name="countryDestination" class="airport-search" placeholder="Search country..." autocomplete="off">                    <div class="input-group">
+
+                            <input type="hidden" id="countryCode" name="countryCode">                        <select id="currency" name="currency">
+
+                            <div id="countryDropdown" class="airport-dropdown"></div>                            <option value="EUR">EUR (€)</option>
+
+                        </div>                            <option value="USD">USD ($)</option>
+
+                        <p class="input-hint">We'll find the best airports in this country for both of you!</p>                            <option value="GBP">GBP (£)</option>
+
+                    </div>                            <option value="TRY">TRY (₺)</option>
+
+                    <div class="input-group" id="everywhereDestGroup" style="display: none;">                            <option value="CHF">CHF</option>
+
+                        <div class="everywhere-info">                        </select>
+
+                            <svg class="everywhere-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">                    </div>
+
+                                <circle cx="12" cy="12" r="10"></circle>                </div>
+
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+
+                                <path d="M2 12h20"></path>                <div class="form-section">
+
+                            </svg>                    <h2>Options</h2>
+
+                            <div class="everywhere-text">                    <div class="checkbox-group">
+
+                                <strong>Search Everywhere!</strong>                        <label class="checkbox-label">
+
+                                <p>We'll find the top 10 cheapest destinations worldwide for both of you to meet.</p>                            <input type="checkbox" id="directOnly" name="directOnly">
+
+                            </div>                            <span class="checkbox-custom"></span>
+
+                        </div>                            <span>Direct flights only (no stops)</span>
+
+                    </div>                        </label>
+
+                </div>                    </div>
+
                 </div>
 
                 <div class="form-section">
-                    <h2>Travel Dates</h2>
-                    <div class="date-inputs">
-                        <div class="input-group">
-                            <label for="dateFrom">From Date</label>
-                            <input type="date" id="dateFrom" name="dateFrom" required>
+
+                    <h2>Travel Dates</h2>                <button type="submit" class="search-btn" id="searchBtn">
+
+                    <div class="date-inputs">                    <span class="btn-text">🔍 Search Flights</span>
+
+                        <div class="input-group">                    <span class="btn-loading" style="display: none;">⏳ Searching...</span>
+
+                            <label for="dateFrom">From Date</label>                </button>
+
+                            <input type="date" id="dateFrom" name="dateFrom" required>            </form>
+
                         </div>
-                        <div class="input-group">
-                            <label for="dateTo">To Date</label>
-                            <input type="date" id="dateTo" name="dateTo" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="tripDays">Trip Duration (days)</label>
-                            <input type="number" id="tripDays" name="tripDays" min="1" max="30" value="3" required>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-section">
-                    <h2>Currency</h2>
-                    <div class="input-group">
-                        <select id="currency" name="currency">
-                            <option value="EUR">EUR (€)</option>
-                            <option value="USD">USD ($)</option>
-                            <option value="GBP">GBP (£)</option>
-                            <option value="TRY">TRY (₺)</option>
-                            <option value="CHF">CHF</option>
-                        </select>
-                    </div>
-                </div>
+                        <div class="input-group">            <div id="results" class="results-container" style="display: none;">
 
-                <div class="form-section">
-                    <h2>Options</h2>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="directOnly" name="directOnly">
-                            <span class="checkbox-custom"></span>
-                            <span>Direct flights only (no stops)</span>
-                        </label>
-                    </div>
-                </div>
+                            <label for="dateTo">To Date</label>                <h2>Search Results</h2>
 
-                <button type="submit" class="search-btn" id="searchBtn">
-                    <span class="btn-text">🔍 Search Flights</span>
-                    <span class="btn-loading" style="display: none;">⏳ Searching...</span>
-                </button>
-            </form>
+                            <input type="date" id="dateTo" name="dateTo" required>                
 
-            <div id="results" class="results-container" style="display: none;">
-                <h2>Search Results</h2>
-                
-                <div id="destinationResults" class="destination-results" style="display: none;">
-                    <h3>Best Destinations Found</h3>
-                    <div class="destinations-list"></div>
-                </div>
-                
-                <div id="bestMatch" class="best-match" style="display: none;">
-                    <h3>Best Combined Option</h3>
+                        </div>                <div id="destinationResults" class="destination-results" style="display: none;">
+
+                        <div class="input-group">                    <h3>Best Destinations Found</h3>
+
+                            <label for="tripDays">Trip Duration (days)</label>                    <div class="destinations-list"></div>
+
+                            <input type="number" id="tripDays" name="tripDays" min="1" max="30" value="3" required>                </div>
+
+                        </div>                
+
+                    </div>                <div id="bestMatch" class="best-match" style="display: none;">
+
+                </div>                    <h3>Best Combined Option</h3>
+
                     <div class="match-content"></div>
-                </div>
 
-                <div id="pairedFlights" class="paired-flights-container">
-                    <!-- Flights paired by date will be shown here -->
+                <div class="form-section">                </div>
+
+                    <h2>Currency</h2>
+
+                    <div class="input-group">                <div id="pairedFlights" class="paired-flights-container">
+
+                        <select id="currency" name="currency">                    <!-- Flights paired by date will be shown here -->
+
+                            <option value="EUR">EUR (€)</option>                </div>
+
+                            <option value="USD">USD ($)</option>
+
+                            <option value="GBP">GBP (£)</option>                <div class="results-grid" style="display: none;">
+
+                            <option value="TRY">TRY (₺)</option>                    <div id="results1" class="flight-results">
+
+                            <option value="CHF">CHF</option>                        <h3>Person 1 Flights</h3>
+
+                        </select>                        <div class="flights-list"></div>
+
+                    </div>                    </div>
+
+                </div>                    <div id="results2" class="flight-results">
+
+                        <h3>Person 2 Flights</h3>
+
+                <div class="form-section">                        <div class="flights-list"></div>
+
+                    <h2>Options</h2>                    </div>
+
+                    <div class="checkbox-group">                </div>
+
+                        <label class="checkbox-label">            </div>
+
+                            <input type="checkbox" id="directOnly" name="directOnly">
+
+                            <span class="checkbox-custom"></span>            <div id="error" class="error-message" style="display: none;"></div>
+
+                            <span>Direct flights only (no stops)</span>            </main>
+
+                        </label>        </div>
+
+                    </div>
+
+                </div>        <!-- Info Tab -->
+
+        <div id="infoTab" class="tab-content">
+
+                <button type="submit" class="search-btn" id="searchBtn">            <div class="info-page">
+
+                    <span class="btn-text">                <h2>How to Use MeetOnSamePage</h2>
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">                
+
+                            <circle cx="11" cy="11" r="8"></circle>                <div class="info-section">
+
+                            <path d="m21 21-4.3-4.3"></path>                    <h3>1. Enter Departure Airports</h3>
+
+                        </svg>                    <p>Enter the airports where each person will be departing from. Start typing the city or airport code and select from the dropdown.</p>
+
+                        Search Flights                </div>
+
+                    </span>
+
+                    <span class="btn-loading" style="display: none;">                <div class="info-section">
+
+                        <span class="spinner"></span>                    <h3>2. Choose Your Destination</h3>
+
+                        Searching...                    <p>You have three options:</p>
+
+                    </span>                    <ul>
+
+                </button>                        <li><strong>Airport:</strong> Search for flights to a specific airport</li>
+
+            </form>                        <li><strong>Country:</strong> Find the best airports in a country for both of you</li>
+
+                        <li><strong>Everywhere:</strong> Discover the cheapest destinations worldwide</li>
+
+            <div id="results" class="results-container" style="display: none;">                    </ul>
+
+                <h2>Search Results</h2>                </div>
+
+                
+
+                <div id="destinationResults" class="destination-results" style="display: none;">                <div class="info-section">
+
+                    <h3>Best Destinations Found</h3>                    <h3>3. Set Travel Dates</h3>
+
+                    <div class="destinations-list"></div>                    <p>Choose your date range and trip duration. We'll find flights where both travelers can meet on the same dates.</p>
+
+                </div>                </div>
+
+                
+
+                <div id="bestMatch" class="best-match" style="display: none;">                <div class="info-section">
+
+                    <h3>Best Combined Option</h3>                    <h3>4. View Results</h3>
+
+                    <div class="match-content"></div>                    <p>Results show flight combinations sorted by total price. Each result displays:</p>
+
+                </div>                    <ul>
+
+                        <li>Combined total price for both travelers</li>
+
+                <div id="pairedFlights" class="paired-flights-container">                        <li>Individual flight details side by side</li>
+
+                    <!-- Flights paired by date will be shown here -->                        <li>Direct booking links to Kiwi.com</li>
+
+                </div>                    </ul>
+
                 </div>
 
                 <div class="results-grid" style="display: none;">
-                    <div id="results1" class="flight-results">
-                        <h3>Person 1 Flights</h3>
-                        <div class="flights-list"></div>
-                    </div>
-                    <div id="results2" class="flight-results">
-                        <h3>Person 2 Flights</h3>
-                        <div class="flights-list"></div>
-                    </div>
-                </div>
-            </div>
 
-            <div id="error" class="error-message" style="display: none;"></div>
-            </main>
-        </div>
+                    <div id="results1" class="flight-results">                <div class="info-section">
+
+                        <h3>Person 1 Flights</h3>                    <h3>Tips</h3>
+
+                        <div class="flights-list"></div>                    <ul>
+
+                    </div>                        <li>Use "Direct flights only" for faster, simpler travel</li>
+
+                    <div id="results2" class="flight-results">                        <li>Try "Everywhere" search to discover unexpected cheap destinations</li>
+
+                        <h3>Person 2 Flights</h3>                        <li>Flexible dates give you more options</li>
+
+                        <div class="flights-list"></div>                    </ul>
+
+                    </div>                </div>
+
+                </div>            </div>
+
+            </div>        </div>
+
+
+
+            <div id="error" class="error-message" style="display: none;"></div>        <!-- Flight Details Modal -->
+
+            </main>        <div id="flightModal" class="modal" style="display: none;">
+
+            <div class="modal-content">
+
+            <!-- Subscribe Section -->                <button class="modal-close" onclick="closeModal()">&times;</button>
+
+            <section class="subscribe-section">                <h2>Flight Details</h2>
+
+                <h3>Stay Updated</h3>                <div id="modalBody" class="modal-body"></div>
+
+                <p>Get notified about new features, price alerts, and travel tips!</p>            </div>
+
+                <form class="subscribe-form" onsubmit="handleSubscribe(event)">        </div>
+
+                    <input type="email" placeholder="Enter your email" required>    </div>
+
+                    <button type="submit">Subscribe</button>
+
+                </form>    <script src="/static/script.js"></script>
+
+            </section></body>
+
+        </div></html>
+
 
         <!-- Info Tab -->
         <div id="infoTab" class="tab-content">
@@ -170,12 +455,12 @@
                 <h2>How to Use MeetOnSamePage</h2>
                 
                 <div class="info-section">
-                    <h3>1. Enter Departure Airports</h3>
+                    <h3><span class="step-number">1</span> Enter Departure Airports</h3>
                     <p>Enter the airports where each person will be departing from. Start typing the city or airport code and select from the dropdown.</p>
                 </div>
 
                 <div class="info-section">
-                    <h3>2. Choose Your Destination</h3>
+                    <h3><span class="step-number">2</span> Choose Your Destination</h3>
                     <p>You have three options:</p>
                     <ul>
                         <li><strong>Airport:</strong> Search for flights to a specific airport</li>
@@ -185,12 +470,12 @@
                 </div>
 
                 <div class="info-section">
-                    <h3>3. Set Travel Dates</h3>
+                    <h3><span class="step-number">3</span> Set Travel Dates</h3>
                     <p>Choose your date range and trip duration. We'll find flights where both travelers can meet on the same dates.</p>
                 </div>
 
                 <div class="info-section">
-                    <h3>4. View Results</h3>
+                    <h3><span class="step-number">4</span> View Results</h3>
                     <p>Results show flight combinations sorted by total price. Each result displays:</p>
                     <ul>
                         <li>Combined total price for both travelers</li>
@@ -200,11 +485,12 @@
                 </div>
 
                 <div class="info-section">
-                    <h3>Tips</h3>
+                    <h3><span class="step-number">💡</span> Tips</h3>
                     <ul>
                         <li>Use "Direct flights only" for faster, simpler travel</li>
                         <li>Try "Everywhere" search to discover unexpected cheap destinations</li>
                         <li>Flexible dates give you more options</li>
+                        <li>Check different currencies to find the best deals</li>
                     </ul>
                 </div>
             </div>
