@@ -3,6 +3,308 @@ let allFlightData = {};
 let currentCurrency = 'EUR';
 let destinationType = 'airport'; // 'airport', 'country', or 'everywhere'
 let countriesData = [];
+let progressInterval = null;
+
+// Date picker state
+let activeCalendar = null;
+// Both start on current month
+const currentMonth = new Date().getMonth();
+const currentYear = new Date().getFullYear();
+let datePickerData = {
+    dateFrom: { month: currentMonth, year: currentYear },
+    dateTo: { month: currentMonth, year: currentYear }
+};
+
+// Currency Dropdown Functions
+function toggleCurrencyDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('currencyDropdown');
+    const langDropdown = document.getElementById('langDropdown');
+    
+    // Close language dropdown if open
+    langDropdown.classList.remove('open');
+    
+    dropdown.classList.toggle('open');
+    
+    // Re-initialize icons for the dropdown
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Language Dropdown Functions
+function toggleLangDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('langDropdown');
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    
+    // Close currency dropdown if open
+    currencyDropdown.classList.remove('open');
+    
+    dropdown.classList.toggle('open');
+    
+    // Re-initialize icons for the dropdown
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+function selectLang(option) {
+    const dropdown = document.getElementById('langDropdown');
+    const trigger = dropdown.querySelector('.lang-trigger');
+    
+    // Update trigger display
+    const flag = option.dataset.flag;
+    const code = option.dataset.code;
+    trigger.querySelector('.lang-flag').textContent = flag;
+    trigger.querySelector('.lang-selected').textContent = code;
+    
+    // Update active state
+    dropdown.querySelectorAll('.lang-item').forEach(opt => {
+        opt.classList.remove('active');
+    });
+    option.classList.add('active');
+    
+    // Close dropdown
+    dropdown.classList.remove('open');
+    
+    // Re-initialize icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+function selectCurrency(option) {
+    const dropdown = document.getElementById('currencyDropdown');
+    const hiddenInput = document.getElementById('currency');
+    const trigger = dropdown.querySelector('.currency-trigger');
+    
+    // Update hidden input value
+    const value = option.dataset.value;
+    const symbol = option.dataset.symbol;
+    const code = option.dataset.code;
+    hiddenInput.value = value;
+    
+    // Update trigger display (symbol + code)
+    trigger.querySelector('.currency-selected').textContent = symbol + ' ' + code;
+    
+    // Update active state
+    dropdown.querySelectorAll('.currency-item').forEach(opt => {
+        opt.classList.remove('active');
+    });
+    option.classList.add('active');
+    
+    // Close dropdown
+    dropdown.classList.remove('open');
+    
+    // Re-initialize icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    const langDropdown = document.getElementById('langDropdown');
+    
+    if (currencyDropdown && !currencyDropdown.contains(e.target)) {
+        currencyDropdown.classList.remove('open');
+    }
+    if (langDropdown && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+    }
+    
+    // Close date pickers when clicking outside
+    if (!e.target.closest('.custom-date-picker')) {
+        document.querySelectorAll('.custom-date-picker').forEach(picker => {
+            picker.classList.remove('open');
+        });
+    }
+});
+
+// Date Picker Functions
+function toggleDatePicker(inputId) {
+    const picker = document.getElementById(inputId + 'Picker');
+    const wasOpen = picker.classList.contains('open');
+    
+    // Close all date pickers first
+    document.querySelectorAll('.custom-date-picker').forEach(p => {
+        p.classList.remove('open');
+    });
+    
+    if (!wasOpen) {
+        picker.classList.add('open');
+        renderDatePicker(inputId);
+    }
+}
+
+function changeMonth(inputId, delta) {
+    datePickerData[inputId].month += delta;
+    
+    if (datePickerData[inputId].month > 11) {
+        datePickerData[inputId].month = 0;
+        datePickerData[inputId].year++;
+    } else if (datePickerData[inputId].month < 0) {
+        datePickerData[inputId].month = 11;
+        datePickerData[inputId].year--;
+    }
+    
+    renderDatePicker(inputId);
+}
+
+function getDateFromInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input && input.value) {
+        const parts = input.value.split('/');
+        if (parts.length === 3) {
+            return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+        }
+    }
+    return null;
+}
+
+function renderDatePicker(inputId) {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    const data = datePickerData[inputId];
+    const monthDisplay = document.getElementById(inputId + 'Month');
+    const daysContainer = document.getElementById(inputId + 'Days');
+    
+    // Update month display
+    monthDisplay.textContent = monthNames[data.month] + ' ' + data.year;
+    
+    // Get first day and number of days
+    const firstDay = new Date(data.year, data.month, 1).getDay();
+    const daysInMonth = new Date(data.year, data.month + 1, 0).getDate();
+    
+    // Today for comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get selected date for current input
+    const input = document.getElementById(inputId);
+    let selectedDay = null;
+    if (input.value) {
+        const parts = input.value.split('/');
+        if (parts.length === 3 && parseInt(parts[1]) - 1 === data.month && parseInt(parts[2]) === data.year) {
+            selectedDay = parseInt(parts[0]);
+        }
+    }
+    
+    // Get From Date for To Date picker (to show it and set minimum)
+    const fromDate = getDateFromInput('dateFrom');
+    let fromDayInMonth = null;
+    if (inputId === 'dateTo' && fromDate) {
+        if (fromDate.getMonth() === data.month && fromDate.getFullYear() === data.year) {
+            fromDayInMonth = fromDate.getDate();
+        }
+    }
+    
+    // Build days HTML
+    let html = '';
+    
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+        html += '<span class="day empty"></span>';
+    }
+    
+    // Day buttons
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(data.year, data.month, day);
+        let isDisabled = date < today;
+        const isToday = date.getTime() === today.getTime();
+        const isSelected = day === selectedDay;
+        const isFromDate = day === fromDayInMonth;
+        
+        // For To Date picker, also disable dates before From Date
+        if (inputId === 'dateTo' && fromDate && date < fromDate) {
+            isDisabled = true;
+        }
+        
+        let classes = 'day';
+        if (isDisabled) classes += ' disabled';
+        if (isToday) classes += ' today';
+        if (isSelected) classes += ' selected';
+        if (isFromDate) classes += ' from-date';
+        
+        if (isDisabled) {
+            html += `<span class="${classes}">${day}</span>`;
+        } else {
+            html += `<span class="${classes}" onclick="selectDate('${inputId}', ${day})">${day}</span>`;
+        }
+    }
+    
+    daysContainer.innerHTML = html;
+}
+
+function selectDate(inputId, day) {
+    const data = datePickerData[inputId];
+    const formattedDate = String(day).padStart(2, '0') + '/' + 
+                          String(data.month + 1).padStart(2, '0') + '/' + 
+                          data.year;
+    
+    // Update hidden input
+    document.getElementById(inputId).value = formattedDate;
+    
+    // Update display
+    document.getElementById(inputId + 'Display').textContent = formattedDate;
+    
+    // Close picker
+    document.getElementById(inputId + 'Picker').classList.remove('open');
+    
+    // If From Date was selected, validate To Date
+    if (inputId === 'dateFrom') {
+        const toDate = getDateFromInput('dateTo');
+        const fromDate = getDateFromInput('dateFrom');
+        
+        // If To Date is before From Date, clear it
+        if (toDate && fromDate && toDate < fromDate) {
+            document.getElementById('dateTo').value = '';
+            document.getElementById('dateToDisplay').textContent = 'Select date';
+        }
+        
+        // Update To Date picker's starting month to From Date's month
+        datePickerData['dateTo'].month = data.month;
+        datePickerData['dateTo'].year = data.year;
+    }
+}
+
+// Duration selector functions
+function changeDuration(delta) {
+    const input = document.getElementById('tripDays');
+    let value = parseInt(input.value) + delta;
+    
+    // Clamp between 1 and 30
+    value = Math.max(1, Math.min(30, value));
+    
+    input.value = value;
+}
+
+function updateDurationDisplay() {
+    const input = document.getElementById('tripDays');
+    let value = parseInt(input.value);
+    
+    // Clamp between 1 and 30
+    if (isNaN(value) || value < 1) value = 1;
+    if (value > 30) value = 30;
+    
+    input.value = value;
+}
+
+// Duration selector functions
+function changeDuration(delta) {
+    const input = document.getElementById('tripDays');
+    const display = document.getElementById('tripDaysDisplay');
+    let value = parseInt(input.value) + delta;
+    
+    // Clamp between 1 and 30
+    value = Math.max(1, Math.min(30, value));
+    
+    input.value = value;
+    display.textContent = value;
+}
 
 // Tab switching function
 function switchTab(tabName) {
@@ -10,7 +312,15 @@ function switchTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+    
+    // Move indicator
+    const indicator = document.querySelector('.tab-indicator');
+    if (tabName === 'info') {
+        indicator.classList.add('right');
+    } else {
+        indicator.classList.remove('right');
+    }
     
     // Update tab content
     document.querySelectorAll('.tab-content').forEach(content => {
@@ -19,41 +329,69 @@ function switchTab(tabName) {
     document.getElementById(tabName + 'Tab').classList.add('active');
 }
 
-// Toast notification system
-function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+// Progress Indicator Functions
+function showProgress() {
+    const indicator = document.getElementById('progressIndicator');
+    indicator.style.display = 'block';
     
-    const icons = {
-        success: '✓',
-        error: '✕',
-        info: 'ℹ'
-    };
+    // Reset all steps
+    document.querySelectorAll('.progress-step').forEach(step => {
+        step.classList.remove('active', 'completed');
+    });
     
-    toast.innerHTML = `
-        <div class="toast-icon">${icons[type]}</div>
-        <span class="toast-message">${message}</span>
-        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-    `;
+    // Reset progress bar
+    document.querySelector('.progress-fill').style.width = '0%';
     
-    container.appendChild(toast);
+    // Start progress animation
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.progress-step');
+    const totalSteps = steps.length;
     
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        toast.style.animation = 'slideInRight 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 5000);
+    // Activate first step immediately
+    steps[0].classList.add('active');
+    
+    progressInterval = setInterval(() => {
+        if (currentStep < totalSteps) {
+            // Mark current step as completed
+            if (currentStep > 0) {
+                steps[currentStep - 1].classList.remove('active');
+                steps[currentStep - 1].classList.add('completed');
+            }
+            
+            // Activate next step
+            if (currentStep < totalSteps) {
+                steps[currentStep].classList.add('active');
+            }
+            
+            // Update progress bar
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            document.querySelector('.progress-fill').style.width = progress + '%';
+            
+            currentStep++;
+        }
+    }, 1500);
 }
 
-// Subscribe form handler
-function handleSubscribe(event) {
-    event.preventDefault();
-    const email = event.target.querySelector('input[type="email"]').value;
+function hideProgress() {
+    const indicator = document.getElementById('progressIndicator');
     
-    // For now, just show a success message (no backend)
-    showToast('Thanks for subscribing! We\'ll keep you updated.', 'success');
-    event.target.reset();
+    // Complete all steps first
+    document.querySelectorAll('.progress-step').forEach(step => {
+        step.classList.remove('active');
+        step.classList.add('completed');
+    });
+    document.querySelector('.progress-fill').style.width = '100%';
+    
+    // Clear interval
+    if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+    }
+    
+    // Hide after a short delay
+    setTimeout(() => {
+        indicator.style.display = 'none';
+    }, 500);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -212,7 +550,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function setLoading(loading) {
         searchBtn.disabled = loading;
         btnText.style.display = loading ? 'none' : 'inline';
-        btnLoading.style.display = loading ? 'inline' : 'none';
+        btnLoading.style.display = loading ? 'inline-flex' : 'none';
+        
+        if (loading) {
+            showProgress();
+        } else {
+            hideProgress();
+        }
     }
     
     function showError(message) {
